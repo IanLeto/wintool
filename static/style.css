@@ -1,0 +1,201 @@
+:root {
+    --bg: #0f1419;
+    --surface: #1a2332;
+    --border: #2d3a4d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --accent-hover: #79b8ff;
+    --danger: #f85149;
+    --success: #3fb950;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+.page {
+    min-height: 100vh;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.header {
+    margin-bottom: 2rem;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    color: var(--accent);
+}
+
+.tagline {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+.tool-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.home-content {
+    padding: 0;
+}
+
+.tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.tool-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.tool-card:hover {
+    border-color: var(--accent);
+    background: rgba(88, 166, 255, 0.08);
+}
+
+.tool-card-name {
+    font-weight: 500;
+}
+
+.tool-card-arrow {
+    color: var(--muted);
+    font-size: 1.2rem;
+}
+
+.content {
+    padding: 0;
+}
+
+.tool-panel h2 {
+    margin: 0 0 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.tool-form .desc {
+    color: var(--muted);
+    margin-bottom: 1rem;
+}
+
+.tool-form .field {
+    margin-bottom: 1rem;
+}
+
+.tool-form .field-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tool-form .field-inline input[type="checkbox"] {
+    width: auto;
+    max-width: none;
+}
+
+.tool-form .field-inline label {
+    margin-bottom: 0;
+}
+
+.tool-form label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+}
+
+.tool-form input[type="text"],
+.tool-form textarea {
+    width: 100%;
+    max-width: 480px;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.95rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: inherit;
+}
+
+.tool-form textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.tool-form input:focus,
+.tool-form textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.btn-run {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btn-run:hover {
+    background: var(--accent-hover);
+}
+
+.tool-form .result {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--surface);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.tool-form .result.success {
+    border-color: var(--success);
+}
+
+.tool-form .result.error {
+    border-color: var(--danger);
+    color: #f85149;
+}

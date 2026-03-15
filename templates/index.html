@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wintool - Windows 文件管理工具</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="page">
+        <header class="header">
+            <h1 class="logo">Wintool</h1>
+            <p class="tagline">Windows 文件管理工具集</p>
+        </header>
+        <main class="home-content">
+            <div class="tool-grid">
+                {% for t in tools %}
+                <a href="/tools/{{ t.id }}" class="tool-card">
+                    <span class="tool-card-name">{{ t.name }}</span>
+                    <span class="tool-card-arrow">→</span>
+                </a>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+</body>
+</html>
