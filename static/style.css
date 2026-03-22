@@ -28,6 +28,10 @@ body {
     padding: 2rem;
 }
 
+.page-tool-shore_info {
+    max-width: 1100px;
+}
+
 .header {
     margin-bottom: 2rem;
 }
@@ -198,4 +202,62 @@ body {
 .tool-form .result.error {
     border-color: var(--danger);
     color: #f85149;
+}
+
+.shore-tool-form {
+    max-width: 100%;
+}
+
+.shore-tool-form code {
+    font-size: 0.85em;
+    background: var(--bg);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+}
+
+.error-text {
+    color: var(--danger);
+}
+
+.shore-meta,
+.shore-desc {
+    margin: 0 0 0.75rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.shore-section-title {
+    margin: 1.25rem 0 0.75rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.shore-section-title:first-of-type {
+    margin-top: 0;
+}
+
+.shore-links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.6rem;
+}
+
+.shore-link-card {
+    display: block;
+    padding: 0.65rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--accent);
+    text-decoration: none;
+    text-align: center;
+    font-size: 0.9rem;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.shore-link-card:hover {
+    border-color: var(--accent);
+    background: rgba(88, 166, 255, 0.12);
+    color: var(--accent-hover);
 }
