@@ -23,3 +23,5 @@ python app.py
 2. **导出目录结构到文件**：多目录递归或仅一级导出到文本
 3. **按 JSON 重命名文件**：根据映射重命名并保留后缀
 4. **上岸信息渠道**：读取 `data/shore_info.json` 渲染地区链接，点击跳转官网；更新数据请编辑该 JSON 后刷新页面
+5. **省考公告入口**：读取 `data/provincial_exam.json`，支持单/多官网与说明文字；详见 `data/README.md`
+6. **关键时间节点**：读取 `data/milestones.json`，时间线展示待关注日期；仅展示、无通知；详见 `data/README.md`
