@@ -29,7 +29,9 @@ body {
 }
 
 .page-tool-shore_info,
-.page-tool-provincial_exam {
+.page-tool-provincial_exam,
+.page-tool-text_viewer,
+.page-tool-media_shelf {
     max-width: 1100px;
 }
 
@@ -511,4 +513,315 @@ body {
     color: var(--muted);
     line-height: 1.5;
     opacity: 0.95;
+}
+
+/* —— 文本阅览（页签 + 正文） —— */
+.text-viewer-form {
+    max-width: 100%;
+}
+
+.text-viewer-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.text-viewer-refresh {
+    margin: 0;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.text-viewer-refresh:hover {
+    background: var(--accent-hover);
+}
+
+.text-viewer-filter-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1 1 200px;
+    min-width: 0;
+}
+
+.text-viewer-filter-hint {
+    font-size: 0.88rem;
+    color: var(--muted);
+    flex-shrink: 0;
+}
+
+.text-viewer-filter {
+    flex: 1 1 auto;
+    min-width: 140px;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.92rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: inherit;
+}
+
+.text-viewer-filter:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.text-viewer-tabs-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.text-viewer-tab {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.88rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.text-viewer-tab:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.text-viewer-tab.is-active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(88, 166, 255, 0.1);
+    font-weight: 500;
+}
+
+.text-viewer-panel {
+    min-height: 120px;
+}
+
+.text-viewer-placeholder {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.text-viewer-dir-hint {
+    display: block;
+    margin-top: 0.75rem;
+    font-size: 0.88rem;
+    opacity: 0.9;
+}
+
+.text-viewer-error {
+    margin: 0;
+    color: var(--danger);
+    font-size: 0.95rem;
+}
+
+.text-viewer-pre {
+    margin: 0;
+    padding: 1rem 1.1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow-x: auto;
+    max-height: min(70vh, 520px);
+    overflow-y: auto;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.text-viewer-pre code {
+    font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    color: var(--text);
+    background: none;
+    padding: 0;
+    font-size: inherit;
+}
+
+/* —— 影视收藏 —— */
+.media-shelf-form {
+    max-width: 100%;
+}
+
+.media-shelf-toolbar {
+    display: grid;
+    grid-template-columns: auto minmax(180px, 1fr) auto auto auto;
+    gap: 0.6rem;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.media-shelf-refresh {
+    margin: 0;
+    padding: 0.58rem 1.1rem;
+    font-size: 0.92rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.media-shelf-refresh:hover {
+    background: var(--accent-hover);
+}
+
+.media-shelf-search,
+.media-shelf-filter-category,
+.media-shelf-filter-status,
+.media-shelf-filter-source {
+    padding: 0.5rem 0.62rem;
+    font-size: 0.9rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: inherit;
+    min-width: 0;
+}
+
+.media-shelf-search:focus,
+.media-shelf-filter-category:focus,
+.media-shelf-filter-status:focus,
+.media-shelf-filter-source:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.media-shelf-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-bottom: 0.95rem;
+}
+
+.media-pill {
+    padding: 0.22rem 0.6rem;
+    font-size: 0.8rem;
+    border-radius: 999px;
+    color: var(--muted);
+    background: rgba(139, 148, 158, 0.12);
+    border: 1px solid rgba(139, 148, 158, 0.22);
+}
+
+.media-pill.is-watched {
+    color: #71d28a;
+    border-color: rgba(63, 185, 80, 0.35);
+    background: rgba(63, 185, 80, 0.14);
+}
+
+.media-pill.is-unwatched {
+    color: #8cb9ff;
+    border-color: rgba(88, 166, 255, 0.35);
+    background: rgba(88, 166, 255, 0.13);
+}
+
+.media-item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.8rem;
+}
+
+.media-item-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 0.85rem 0.9rem;
+}
+
+.media-item-title {
+    margin: 0 0 0.55rem;
+    font-size: 1rem;
+    line-height: 1.35;
+}
+
+.media-item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.media-badge {
+    display: inline-block;
+    padding: 0.18rem 0.52rem;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: rgba(139, 148, 158, 0.1);
+}
+
+.media-badge.category {
+    color: #9cc4ff;
+    border-color: rgba(88, 166, 255, 0.3);
+    background: rgba(88, 166, 255, 0.12);
+}
+
+.media-badge.watched {
+    color: #71d28a;
+    border-color: rgba(63, 185, 80, 0.35);
+    background: rgba(63, 185, 80, 0.14);
+}
+
+.media-badge.unwatched {
+    color: #8cb9ff;
+    border-color: rgba(88, 166, 255, 0.35);
+    background: rgba(88, 166, 255, 0.13);
+}
+
+.media-badge.unknown,
+.media-badge.source {
+    color: var(--muted);
+}
+
+.media-item-note {
+    margin: 0.55rem 0 0;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: var(--muted);
+    word-break: break-word;
+}
+
+.media-shelf-placeholder {
+    margin: 0.4rem 0 0;
+    color: var(--muted);
+}
+
+.media-shelf-error {
+    margin: 0.4rem 0 0;
+    color: var(--danger);
+}
+
+@media (max-width: 860px) {
+    .media-shelf-toolbar {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .media-shelf-refresh,
+    .media-shelf-search {
+        grid-column: span 2;
+    }
 }
