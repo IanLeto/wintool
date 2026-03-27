@@ -12,7 +12,7 @@ DB_CONFIG = {
     'port': 3306,
     'user': 'testuser',
     'password': 'testpassword',
-    'database': 'testdlb',
+    'database': 'iantool',
     'charset': 'utf8mb4',
     'cursorclass': pymysql.cursors.DictCursor
 }

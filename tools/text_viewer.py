@@ -3,6 +3,8 @@
 工具：文本阅览 — 读取 data/text_viewer/ 下的纯文本文件，前端以页签切换展示。
 将 .txt / .md 等文件放入该目录后，在页面点击「刷新列表」或重新打开工具即可。
 """
+from __future__ import annotations
+
 import html
 import os
 

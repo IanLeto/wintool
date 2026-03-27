@@ -3,6 +3,8 @@
 工具：省考公告入口 — 根据 data/provincial_exam.json 渲染。
 支持「官网」为单个字符串或 URL 数组；可选「说明」；多链接时尽量用说明里按顿号拆分的短标题。
 """
+from __future__ import annotations
+
 import html
 import json
 import os
