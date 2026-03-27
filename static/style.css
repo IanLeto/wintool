@@ -825,3 +825,383 @@ body {
         grid-column: span 2;
     }
 }
+
+/* —— 体重管理 —— */
+.page-tool-body_weight {
+    max-width: 1200px;
+}
+
+.body-weight-form {
+    max-width: 100%;
+}
+
+.body-weight-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0;
+}
+
+.body-tab {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.body-tab:hover {
+    color: var(--text);
+    background: rgba(88, 166, 255, 0.05);
+}
+
+.body-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+.body-panel {
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 仪表盘 */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.dash-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+}
+
+.dash-card h3 {
+    margin: 0 0 0.75rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.dash-value {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+}
+
+.dash-value.small {
+    font-size: 1.2rem;
+}
+
+.dash-sub {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.phase-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 1.3rem;
+}
+
+.phase-building {
+    background: rgba(88, 166, 255, 0.15);
+    color: #58a6ff;
+}
+
+.phase-plateau {
+    background: rgba(201, 162, 39, 0.15);
+    color: #e3c76a;
+}
+
+.phase-accelerating {
+    background: rgba(63, 185, 80, 0.15);
+    color: #3fb950;
+}
+
+.phase-unstable {
+    background: rgba(248, 81, 73, 0.15);
+    color: #f85149;
+}
+
+.dash-chart {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    height: 300px;
+}
+
+.dash-chart canvas {
+    max-height: 100%;
+}
+
+/* 每日记录表单 */
+.daily-form {
+    max-width: 600px;
+}
+
+.form-row {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.form-row label {
+    min-width: 140px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    flex: 1;
+    padding: 0.6rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.form-range {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.form-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.form-range::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+.checkbox-row {
+    gap: 2rem;
+}
+
+.checkbox-row label {
+    min-width: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.checkbox-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
+}
+
+.btn-secondary {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.result-msg {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.result-msg.success {
+    background: rgba(63, 185, 80, 0.15);
+    color: #3fb950;
+    border: 1px solid rgba(63, 185, 80, 0.3);
+}
+
+.result-msg.error {
+    background: rgba(248, 81, 73, 0.15);
+    color: #f85149;
+    border: 1px solid rgba(248, 81, 73, 0.3);
+}
+
+/* 趋势图表 */
+.trend-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.trend-controls label {
+    font-weight: 500;
+}
+
+.trend-chart {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    height: 450px;
+}
+
+.trend-chart canvas {
+    max-height: 100%;
+}
+
+/* 策略管理 */
+.strategy-current,
+.strategy-new,
+.strategy-history {
+    margin-bottom: 2rem;
+}
+
+.strategy-current h3,
+.strategy-new h3,
+.strategy-history h3 {
+    margin: 0 0 1rem;
+    font-size: 1.2rem;
+    color: var(--text);
+}
+
+.strategy-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.strategy-card.active {
+    border-color: var(--accent);
+    background: rgba(88, 166, 255, 0.05);
+}
+
+.strategy-card h4 {
+    margin: 0 0 0.75rem;
+    font-size: 1.1rem;
+    color: var(--text);
+}
+
+.strategy-card p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.badge-active {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
+}
+
+/* 数据导出 */
+.export-section {
+    max-width: 800px;
+}
+
+.export-section h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.2rem;
+}
+
+.export-section .desc {
+    margin-bottom: 1rem;
+    color: var(--muted);
+}
+
+.export-result {
+    margin-top: 1.5rem;
+}
+
+.export-textarea {
+    width: 100%;
+    min-height: 400px;
+    padding: 1rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.export-result button {
+    margin-top: 1rem;
+}

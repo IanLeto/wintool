@@ -172,7 +172,7 @@ function initMediaShelf() {
     const c = categorySel.value || "all";
     const s = statusSel.value || "all";
     const source = sourceSel.value || "all";
-    return items.filter((x) => {
+    const filtered = items.filter((x) => {
       if (c !== "all" && x.category !== c) return false;
       if (s !== "all" && x.status !== s) return false;
       if (source !== "all" && x.source !== source) return false;
@@ -180,6 +180,14 @@ function initMediaShelf() {
       const hay = `${x.title || ""} ${x.note || ""}`.toLowerCase();
       return hay.includes(q);
     });
+    const statusRank = { unwatched: 0, watched: 1 };
+    filtered.sort((a, b) => {
+      const ra = statusRank[a.status] ?? 2;
+      const rb = statusRank[b.status] ?? 2;
+      if (ra !== rb) return ra - rb;
+      return (a.title || "").localeCompare((b.title || ""), "zh-Hans-CN", { sensitivity: "base" });
+    });
+    return filtered;
   }
 
   function renderSummary(list) {
@@ -256,9 +264,423 @@ function initMediaShelf() {
   fetchItems();
 }
 
+function initBodyWeight() {
+  const root = document.querySelector("[data-body-weight]");
+  if (!root) return;
+
+  const toolId = root.dataset.toolId || "body_weight";
+  let dashboardChart = null;
+  let trendChart = null;
+
+  // 标签切换
+  root.querySelectorAll(".body-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      const targetPanel = tab.dataset.tab;
+      root.querySelectorAll(".body-tab").forEach(t => t.classList.remove("active"));
+      root.querySelectorAll(".body-panel").forEach(p => p.style.display = "none");
+      tab.classList.add("active");
+      const panel = root.querySelector(`[data-panel="${targetPanel}"]`);
+      if (panel) panel.style.display = "block";
+      
+      // 加载对应数据
+      if (targetPanel === "dashboard") loadDashboard();
+      else if (targetPanel === "daily") initDailyForm();
+      else if (targetPanel === "trend") loadTrend();
+      else if (targetPanel === "strategy") loadStrategy();
+    });
+  });
+
+  // 仪表盘
+  async function loadDashboard() {
+    try {
+      const res = await fetch(`/api/tools/${toolId}/dashboard`);
+      const data = await res.json();
+      if (!data.ok) {
+        console.error("加载仪表盘失败:", data.error);
+        return;
+      }
+
+      document.getElementById("current-weight").textContent = data.current_weight ? `${data.current_weight} kg` : "--";
+      document.getElementById("ma7-weight").textContent = data.ma7 ? `${data.ma7} kg` : "--";
+      
+      const phaseEl = document.getElementById("current-phase");
+      const phaseMap = {
+        building: "建立期",
+        plateau: "平台期",
+        accelerating: "加速期",
+        unstable: "失控期"
+      };
+      phaseEl.textContent = phaseMap[data.phase?.phase] || "--";
+      phaseEl.className = `dash-value phase-badge phase-${data.phase?.phase || "unknown"}`;
+      document.getElementById("phase-reason").textContent = data.phase?.reason || "--";
+      
+      document.getElementById("week-compliance").textContent = data.compliance ? `${(data.compliance * 100).toFixed(0)}%` : "--";
+      document.getElementById("week-binge").textContent = data.binge_count || 0;
+      
+      document.getElementById("current-strategy").textContent = data.strategy?.name || "未设置";
+      document.getElementById("strategy-days").textContent = data.strategy ? `运行 ${data.strategy.days} 天` : "--";
+
+      // 绘制图表
+      renderDashboardChart(data.chart);
+    } catch (err) {
+      console.error("加载仪表盘失败:", err);
+    }
+  }
+
+  function renderDashboardChart(chartData) {
+    const canvas = document.getElementById("dashboard-chart");
+    if (!canvas) return;
+    
+    if (dashboardChart) dashboardChart.destroy();
+    
+    const ctx = canvas.getContext("2d");
+    dashboardChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: chartData.dates,
+        datasets: [{
+          label: "体重 (kg)",
+          data: chartData.weights,
+          borderColor: "#58a6ff",
+          backgroundColor: "rgba(88, 166, 255, 0.1)",
+          tension: 0.3,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true, labels: { color: "#e6edf3" } }
+        },
+        scales: {
+          x: { ticks: { color: "#8b949e" }, grid: { color: "#2d3a4d" } },
+          y: { ticks: { color: "#8b949e" }, grid: { color: "#2d3a4d" } }
+        }
+      }
+    });
+  }
+
+  // 每日记录
+  function initDailyForm() {
+    const today = new Date().toISOString().split("T")[0];
+    document.getElementById("log-date").value = today;
+    
+    // 范围滑块实时显示
+    ["energy", "hunger", "mood"].forEach(type => {
+      const slider = document.getElementById(`log-${type}`);
+      const display = document.getElementById(`${type}-val`);
+      slider.addEventListener("input", () => {
+        display.textContent = slider.value;
+      });
+    });
+  }
+
+  document.getElementById("load-date")?.addEventListener("click", async () => {
+    const dateVal = document.getElementById("log-date").value;
+    if (!dateVal) return;
+    
+    try {
+      const res = await fetch(`/api/tools/${toolId}/daily-log?date=${dateVal}`);
+      const data = await res.json();
+      if (data.ok && data.log) {
+        const log = data.log;
+        document.getElementById("log-weight").value = log.weight || "";
+        document.getElementById("log-sleep").value = log.sleep_hours || "";
+        document.getElementById("log-steps").value = log.steps || "";
+        document.getElementById("log-exercise").value = log.exercise_minutes || "";
+        document.getElementById("log-fasting").checked = log.fasting_168 === 1;
+        document.getElementById("log-sugar-free").checked = log.sugar_free === 1;
+        document.getElementById("log-binge").checked = log.binge === 1;
+        document.getElementById("log-energy").value = log.energy_level || 5;
+        document.getElementById("energy-val").textContent = log.energy_level || 5;
+        document.getElementById("log-hunger").value = log.hunger_level || 5;
+        document.getElementById("hunger-val").textContent = log.hunger_level || 5;
+        document.getElementById("log-mood").value = log.mood_level || 5;
+        document.getElementById("mood-val").textContent = log.mood_level || 5;
+        document.getElementById("log-notes").value = log.notes || "";
+      }
+    } catch (err) {
+      console.error("加载记录失败:", err);
+    }
+  });
+
+  document.getElementById("copy-yesterday")?.addEventListener("click", async () => {
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split("T")[0];
+    
+    try {
+      const res = await fetch(`/api/tools/${toolId}/daily-log?date=${yesterdayStr}`);
+      const data = await res.json();
+      if (data.ok && data.log) {
+        const log = data.log;
+        document.getElementById("log-weight").value = log.weight || "";
+        document.getElementById("log-sleep").value = log.sleep_hours || "";
+        document.getElementById("log-steps").value = log.steps || "";
+        document.getElementById("log-exercise").value = log.exercise_minutes || "";
+        document.getElementById("log-fasting").checked = log.fasting_168 === 1;
+        document.getElementById("log-sugar-free").checked = log.sugar_free === 1;
+        document.getElementById("log-binge").checked = false;
+        document.getElementById("log-energy").value = log.energy_level || 5;
+        document.getElementById("energy-val").textContent = log.energy_level || 5;
+        document.getElementById("log-hunger").value = log.hunger_level || 5;
+        document.getElementById("hunger-val").textContent = log.hunger_level || 5;
+        document.getElementById("log-mood").value = log.mood_level || 5;
+        document.getElementById("mood-val").textContent = log.mood_level || 5;
+        document.getElementById("log-notes").value = "";
+      }
+    } catch (err) {
+      console.error("复制昨日数据失败:", err);
+    }
+  });
+
+  document.getElementById("save-log")?.addEventListener("click", async () => {
+    const resultEl = document.getElementById("daily-result");
+    const logData = {
+      date: document.getElementById("log-date").value,
+      weight: document.getElementById("log-weight").value,
+      sleep_hours: document.getElementById("log-sleep").value,
+      steps: document.getElementById("log-steps").value,
+      exercise_minutes: document.getElementById("log-exercise").value,
+      fasting_168: document.getElementById("log-fasting").checked,
+      sugar_free: document.getElementById("log-sugar-free").checked,
+      binge: document.getElementById("log-binge").checked,
+      energy_level: document.getElementById("log-energy").value,
+      hunger_level: document.getElementById("log-hunger").value,
+      mood_level: document.getElementById("log-mood").value,
+      notes: document.getElementById("log-notes").value
+    };
+
+    try {
+      const res = await fetch(`/api/tools/${toolId}/daily-log`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(logData)
+      });
+      const data = await res.json();
+      
+      if (data.ok) {
+        resultEl.textContent = "✓ " + data.message;
+        resultEl.className = "result-msg success";
+      } else {
+        resultEl.textContent = "✗ " + data.error;
+        resultEl.className = "result-msg error";
+      }
+    } catch (err) {
+      resultEl.textContent = "✗ 保存失败: " + err.message;
+      resultEl.className = "result-msg error";
+    }
+  });
+
+  document.getElementById("clear-form")?.addEventListener("click", () => {
+    document.getElementById("log-weight").value = "";
+    document.getElementById("log-sleep").value = "";
+    document.getElementById("log-steps").value = "";
+    document.getElementById("log-exercise").value = "";
+    document.getElementById("log-fasting").checked = false;
+    document.getElementById("log-sugar-free").checked = false;
+    document.getElementById("log-binge").checked = false;
+    document.getElementById("log-energy").value = 5;
+    document.getElementById("energy-val").textContent = 5;
+    document.getElementById("log-hunger").value = 5;
+    document.getElementById("hunger-val").textContent = 5;
+    document.getElementById("log-mood").value = 5;
+    document.getElementById("mood-val").textContent = 5;
+    document.getElementById("log-notes").value = "";
+  });
+
+  // 趋势图表
+  async function loadTrend() {
+    const days = document.getElementById("trend-range")?.value || 30;
+    
+    try {
+      const res = await fetch(`/api/tools/${toolId}/trend?days=${days}`);
+      const data = await res.json();
+      if (!data.ok) {
+        console.error("加载趋势失败:", data.error);
+        return;
+      }
+
+      renderTrendChart(data);
+    } catch (err) {
+      console.error("加载趋势失败:", err);
+    }
+  }
+
+  function renderTrendChart(data) {
+    const canvas = document.getElementById("trend-chart");
+    if (!canvas) return;
+    
+    if (trendChart) trendChart.destroy();
+    
+    const ctx = canvas.getContext("2d");
+    trendChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: data.dates,
+        datasets: [
+          {
+            label: "体重 (kg)",
+            data: data.weights,
+            borderColor: "#58a6ff",
+            backgroundColor: "rgba(88, 166, 255, 0.1)",
+            tension: 0.2,
+            pointRadius: 3
+          },
+          {
+            label: "7日均线",
+            data: data.ma7,
+            borderColor: "#f85149",
+            backgroundColor: "transparent",
+            tension: 0.3,
+            pointRadius: 0,
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true, labels: { color: "#e6edf3" } }
+        },
+        scales: {
+          x: { ticks: { color: "#8b949e" }, grid: { color: "#2d3a4d" } },
+          y: { ticks: { color: "#8b949e" }, grid: { color: "#2d3a4d" } }
+        }
+      }
+    });
+  }
+
+  document.getElementById("refresh-trend")?.addEventListener("click", loadTrend);
+  document.getElementById("trend-range")?.addEventListener("change", loadTrend);
+
+  // 策略管理
+  async function loadStrategy() {
+    try {
+      const [currentRes, historyRes] = await Promise.all([
+        fetch(`/api/tools/${toolId}/strategy/current`),
+        fetch(`/api/tools/${toolId}/strategy/history`)
+      ]);
+      
+      const currentData = await currentRes.json();
+      const historyData = await historyRes.json();
+      
+      // 显示当前策略
+      const currentEl = document.getElementById("current-strategy-detail");
+      if (currentData.ok && currentData.strategy) {
+        const s = currentData.strategy;
+        currentEl.innerHTML = `
+          <div class="strategy-card">
+            <h4>${s.version_name}</h4>
+            <p><strong>开始日期：</strong>${s.start_date}</p>
+            <p><strong>核心策略：</strong>${s.core_strategy}</p>
+            <p><strong>变更变量：</strong>${s.variables_changed}</p>
+            <p><strong>预期效果：</strong>${s.expected_effect}</p>
+          </div>
+        `;
+      } else {
+        currentEl.innerHTML = "<p>暂无活跃策略</p>";
+      }
+      
+      // 显示历史版本
+      const listEl = document.getElementById("strategy-list");
+      if (historyData.ok && historyData.strategies && historyData.strategies.length) {
+        listEl.innerHTML = historyData.strategies.map(s => `
+          <div class="strategy-card ${s.active ? 'active' : 'inactive'}">
+            <h4>${s.version_name} ${s.active ? '<span class="badge-active">当前</span>' : ''}</h4>
+            <p><strong>时间：</strong>${s.start_date} ${s.end_date ? '至 ' + s.end_date : '至今'}</p>
+            <p><strong>核心策略：</strong>${s.core_strategy}</p>
+          </div>
+        `).join("");
+      } else {
+        listEl.innerHTML = "<p>暂无历史版本</p>";
+      }
+      
+      // 设置默认开始日期为今天
+      document.getElementById("strategy-start").value = new Date().toISOString().split("T")[0];
+    } catch (err) {
+      console.error("加载策略失败:", err);
+    }
+  }
+
+  document.getElementById("create-strategy")?.addEventListener("click", async () => {
+    const resultEl = document.getElementById("strategy-result");
+    const strategyData = {
+      version_name: document.getElementById("strategy-name").value,
+      start_date: document.getElementById("strategy-start").value,
+      core_strategy: document.getElementById("strategy-core").value,
+      variables_changed: document.getElementById("strategy-vars").value,
+      expected_effect: document.getElementById("strategy-effect").value
+    };
+
+    if (!strategyData.version_name || !strategyData.start_date || !strategyData.core_strategy) {
+      resultEl.textContent = "✗ 请填写必填字段";
+      resultEl.className = "result-msg error";
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/tools/${toolId}/strategy`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(strategyData)
+      });
+      const data = await res.json();
+      
+      if (data.ok) {
+        resultEl.textContent = "✓ " + data.message;
+        resultEl.className = "result-msg success";
+        // 清空表单
+        document.getElementById("strategy-name").value = "";
+        document.getElementById("strategy-core").value = "";
+        document.getElementById("strategy-vars").value = "";
+        document.getElementById("strategy-effect").value = "";
+        // 重新加载
+        setTimeout(loadStrategy, 1000);
+      } else {
+        resultEl.textContent = "✗ " + data.error;
+        resultEl.className = "result-msg error";
+      }
+    } catch (err) {
+      resultEl.textContent = "✗ 创建失败: " + err.message;
+      resultEl.className = "result-msg error";
+    }
+  });
+
+  // 数据导出
+  document.getElementById("export-data")?.addEventListener("click", async () => {
+    try {
+      const res = await fetch(`/api/tools/${toolId}/export`);
+      const data = await res.json();
+      
+      if (data.ok) {
+        document.getElementById("export-json").value = JSON.stringify(data.data, null, 2);
+      } else {
+        document.getElementById("export-json").value = "导出失败: " + data.error;
+      }
+    } catch (err) {
+      document.getElementById("export-json").value = "导出失败: " + err.message;
+    }
+  });
+
+  document.getElementById("copy-export")?.addEventListener("click", () => {
+    const textarea = document.getElementById("export-json");
+    textarea.select();
+    document.execCommand("copy");
+    alert("已复制到剪贴板");
+  });
+
+  // 初始化：加载仪表盘
+  loadDashboard();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initTextViewer();
   initMediaShelf();
+  initBodyWeight();
 
   document.body.addEventListener("click", async (e) => {
     const runBtn = e.target.closest(".btn-run");
