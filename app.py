@@ -3,11 +3,50 @@
 Wintool - Windows 文件管理工具
 Web 界面 + Flask 后端，可插拔工具架构。
 """
+import json
 import os
+
 from flask import Flask, render_template, request, jsonify
 from tools import TOOLS
 
 app = Flask(__name__)
+
+
+def _is_localhost():
+    a = request.remote_addr or ""
+    return a in ("127.0.0.1", "::1", "localhost") or a.startswith("127.")
+
+
+@app.route("/api/pick-folder", methods=["POST"])
+def api_pick_folder():
+    """仅本机：弹出系统文件夹选择，返回 WSL 风格路径。"""
+    if not _is_localhost():
+        return jsonify({"ok": False, "error": "仅本机可打开文件夹选择"}), 403
+    from path_picker import pick_folder_native
+
+    p = pick_folder_native()
+    if not p:
+        return jsonify(
+            {
+                "ok": False,
+                "error": "未选择文件夹，或当前环境无法弹出对话框（可改用粘贴路径）",
+            }
+        )
+    return jsonify({"ok": True, "path": p})
+
+
+@app.route("/api/path-presets", methods=["GET"])
+def api_path_presets():
+    base = os.path.dirname(os.path.abspath(__file__))
+    fp = os.path.join(base, "data", "path_presets.json")
+    try:
+        with open(fp, encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception:
+        data = {"presets": []}
+    if not isinstance(data.get("presets"), list):
+        data = {"presets": []}
+    return jsonify(data)
 
 
 def _tool_by_id(tool_id):

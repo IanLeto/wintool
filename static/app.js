@@ -723,6 +723,22 @@ document.addEventListener("DOMContentLoaded", () => {
           msg = `完成。移动了 ${data.moved.length} 个文件`;
           if (data.renamed?.length) msg += `\n重命名: ${data.renamed.map(([a, b]) => `${a} → ${b}`).join(", ")}`;
           if (data.errors?.length) msg += `\n错误: ${data.errors.join("; ")}`;
+        } else if (Array.isArray(data.unzipped)) {
+          const seven = data.seven_found ? "已检测到 7z" : "未检测到 7z（部分格式依赖 7z）";
+          msg = `${seven}\n成功 ${data.unzipped.length} 个（已删原压缩包）`;
+          if (data.unzipped.length) {
+            msg +=
+              "\n" +
+              data.unzipped.map((x) => `${x.file} [${x.method}]`).join("\n");
+          }
+          if (data.skipped?.length) {
+            msg +=
+              "\n跳过 " +
+              data.skipped.length +
+              " 个:\n" +
+              data.skipped.map((x) => `${x.file}\n  → ${x.reason}`).join("\n");
+          }
+          if (data.errors?.length) msg += "\n错误: " + data.errors.join("; ");
         } else {
           msg = "完成。";
         }

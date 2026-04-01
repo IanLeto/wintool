@@ -19,11 +19,11 @@ class ExportDirStructureTool(BaseTool):
             <p class="desc">输入多个目录路径（每行一个），将每个目录下的文件和文件夹名称（相对路径）写入到指定文件中。可勾选「仅一级」只导出直接子项，不递归子目录。</p>
             <div class="field">
                 <label for="dirs_input">目录路径（每行一个）：</label>
-                <textarea id="dirs_input" data-param="dirs" rows="6" placeholder="/mnt/c/Users/xxx&#10;/mnt/d/Projects"></textarea>
+                <textarea id="dirs_input" data-param="dirs" data-wsl-path-input data-path-mode="append" rows="6" placeholder="/mnt/c/Users/xxx&#10;/mnt/d/Projects"></textarea>
             </div>
             <div class="field">
                 <label for="output_file">输出文件路径：</label>
-                <input type="text" id="output_file" data-param="output" placeholder="/mnt/c/structure.txt" />
+                <input type="text" id="output_file" data-param="output" data-wsl-path-input placeholder="/mnt/c/structure.txt" />
             </div>
             <div class="field field-inline">
                 <input type="checkbox" id="shallow_export" data-param="shallow" value="1" />

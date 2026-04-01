@@ -1018,3 +1018,67 @@ body {
 .export-result button {
     margin-top: 1rem;
 }
+
+/* —— 路径辅助（选择文件夹 / 粘贴 / 预设）—— */
+.path-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.45rem;
+}
+
+.btn-path {
+    padding: 0.38rem 0.75rem;
+    font-size: 0.85rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--accent);
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.btn-path:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: rgba(88, 166, 255, 0.1);
+}
+
+.btn-path:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.path-presets {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 1rem;
+    padding: 0.65rem 0.75rem;
+    background: rgba(88, 166, 255, 0.06);
+    border: 1px solid rgba(88, 166, 255, 0.18);
+    border-radius: 8px;
+}
+
+.path-presets-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-right: 0.25rem;
+}
+
+.path-preset-chip {
+    padding: 0.28rem 0.65rem;
+    font-size: 0.82rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text);
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.path-preset-chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}

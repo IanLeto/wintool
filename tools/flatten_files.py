@@ -21,7 +21,7 @@ class FlattenFilesTool(BaseTool):
             <p class="desc">将指定目录及其所有子目录中的文件，递归移动到该目录根下。重名文件会自动重命名（如 file.txt → file_1.txt）。</p>
             <div class="field">
                 <label for="flatten_path">目标目录路径：</label>
-                <input type="text" id="flatten_path" data-param="path" placeholder="/mnt/c/Users/..." value="/mnt/c" />
+                <input type="text" id="flatten_path" data-param="path" data-wsl-path-input placeholder="/mnt/c/Users/..." value="/mnt/c" />
             </div>
             <button type="button" class="btn-run" data-tool="flatten_files">执行</button>
             <div class="result" id="flatten_result"></div>

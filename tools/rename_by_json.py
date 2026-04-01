@@ -25,7 +25,7 @@ class RenameByJsonTool(BaseTool):
             </div>
             <div class="field">
                 <label for="rename_dir">目录路径：</label>
-                <input type="text" id="rename_dir" data-param="path" placeholder="/mnt/c/Users/.../Movies" />
+                <input type="text" id="rename_dir" data-param="path" data-wsl-path-input placeholder="/mnt/c/Users/.../Movies" />
             </div>
             <button type="button" class="btn-run" data-tool="rename_by_json">执行</button>
             <div class="result" id="rename_result"></div>
