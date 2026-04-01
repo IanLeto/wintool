@@ -1,0 +1,12 @@
+{
+  "presets": [
+    {
+      "label": "C 盘根目录",
+      "path": "/mnt/c/"
+    },
+    {
+      "label": "当前用户 Downloads（请改成你的用户名）",
+      "path": "/mnt/c/Users/你的用户名/Downloads"
+    }
+  ]
+}
