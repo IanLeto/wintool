@@ -264,6 +264,134 @@ function initMediaShelf() {
   fetchItems();
 }
 
+function initAiLibrary() {
+  const root = document.querySelector("[data-ai-library]");
+  if (!root) return;
+
+  const toolId = root.dataset.toolId || "ai_library";
+  const refreshBtn = root.querySelector(".ai-library-refresh");
+  const groupSel = root.querySelector(".ai-library-group");
+  const filterInput = root.querySelector(".ai-library-filter");
+  const metaEl = root.querySelector(".ai-library-meta");
+  const fileListEl = root.querySelector(".ai-library-filelist");
+  const mainEl = root.querySelector(".ai-library-main");
+
+  let files = [];
+  let activeFile = null;
+
+  function esc(s) {
+    const d = document.createElement("div");
+    d.textContent = s ?? "";
+    return d.innerHTML;
+  }
+
+  function filteredFiles() {
+    const q = (filterInput.value || "").trim().toLowerCase();
+    if (!q) return files;
+    return files.filter((x) => x.toLowerCase().includes(q));
+  }
+
+  function renderFileList() {
+    const list = filteredFiles();
+    fileListEl.innerHTML = "";
+    if (!list.length) {
+      fileListEl.innerHTML = '<p class="ai-library-empty">没有匹配文件</p>';
+      return;
+    }
+    list.forEach((name) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "ai-library-file" + (name === activeFile ? " is-active" : "");
+      btn.dataset.file = name;
+      btn.textContent = name;
+      fileListEl.appendChild(btn);
+    });
+  }
+
+  async function loadContent(name) {
+    if (!name) return;
+    activeFile = name;
+    renderFileList();
+    mainEl.innerHTML = '<p class="ai-library-placeholder">正在加载正文…</p>';
+    try {
+      const group = groupSel.value || "answers";
+      const u = `/api/tools/${encodeURIComponent(toolId)}/content?group=${encodeURIComponent(group)}&file=${encodeURIComponent(name)}`;
+      const res = await fetch(u);
+      const data = await res.json();
+      if (!data.ok) {
+        mainEl.innerHTML = `<p class="ai-library-error">${esc(data.error || "读取失败")}</p>`;
+        return;
+      }
+      mainEl.innerHTML = `<pre class="ai-library-pre"><code>${esc(data.content || "")}</code></pre>`;
+    } catch (err) {
+      mainEl.innerHTML = `<p class="ai-library-error">${esc("请求失败: " + err.message)}</p>`;
+    }
+  }
+
+  async function fetchList() {
+    fileListEl.innerHTML = "";
+    mainEl.innerHTML = '<p class="ai-library-placeholder">正在加载列表…</p>';
+    metaEl.textContent = "";
+    try {
+      const group = groupSel.value || "answers";
+      const u = `/api/tools/${encodeURIComponent(toolId)}/list?group=${encodeURIComponent(group)}`;
+      const res = await fetch(u);
+      const data = await res.json();
+      if (!data.ok) {
+        mainEl.innerHTML = `<p class="ai-library-error">${esc(data.error || "加载失败")}</p>`;
+        return;
+      }
+      files = data.files || [];
+      metaEl.innerHTML = `
+        <span class="ai-library-pill">${esc(data.group_label || group)}</span>
+        <span class="ai-library-pill">${files.length} 个文件</span>
+        <span class="ai-library-dir">${esc(data.dir || "")}</span>
+      `;
+
+      if (!files.length) {
+        activeFile = null;
+        const hint = data.hint ? `<span class="ai-library-hint">${esc(data.hint)}</span>` : "";
+        mainEl.innerHTML = `<p class="ai-library-placeholder">当前目录暂无可展示文件。${hint}</p>`;
+        renderFileList();
+        return;
+      }
+      if (!activeFile || !files.includes(activeFile)) {
+        activeFile = files[0];
+      }
+      renderFileList();
+      await loadContent(activeFile);
+    } catch (err) {
+      mainEl.innerHTML = `<p class="ai-library-error">${esc("请求失败: " + err.message)}</p>`;
+    }
+  }
+
+  fileListEl.addEventListener("click", (e) => {
+    const btn = e.target.closest(".ai-library-file");
+    if (!btn || !root.contains(btn)) return;
+    const name = btn.dataset.file;
+    if (name) loadContent(name);
+  });
+
+  refreshBtn.addEventListener("click", () => fetchList());
+  groupSel.addEventListener("change", () => {
+    activeFile = null;
+    fetchList();
+  });
+  filterInput.addEventListener("input", () => {
+    const list = filteredFiles();
+    renderFileList();
+    if (!list.length) {
+      mainEl.innerHTML = '<p class="ai-library-placeholder">没有匹配文件。</p>';
+      return;
+    }
+    if (!list.includes(activeFile)) {
+      loadContent(list[0]);
+    }
+  });
+
+  fetchList();
+}
+
 function initBodyWeight() {
   const root = document.querySelector("[data-body-weight]");
   if (!root) return;
@@ -680,6 +808,7 @@ function initBodyWeight() {
 document.addEventListener("DOMContentLoaded", () => {
   initTextViewer();
   initMediaShelf();
+  initAiLibrary();
   initBodyWeight();
 
   document.body.addEventListener("click", async (e) => {

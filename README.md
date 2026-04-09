@@ -54,7 +54,8 @@ chmod +x start_wintool.command stop_wintool.command
 5. **体重管理**：BodyOS 个人减脂管理系统，支持每日记录、趋势分析、策略版本管理、数据导出；详见 `data/body_weight_README.md`
 6. **文本阅览**：快速浏览 `data/text_viewer/` 目录下的文本文件，支持页签切换和搜索过滤
 7. **影视收藏**：管理 `data/media_shelf/` 目录下的影视 JSON 文件，支持分类、状态筛选和搜索
+8. **AI内容库**：聚合浏览项目根目录下的 `ai回答/` 与 `ai语料/`，支持目录切换、文件筛选、正文预览
 
 ### 信息查询工具
-8. **上岸信息渠道**：读取 `data/shore_info.json` 渲染地区链接，点击跳转官网；更新数据请编辑该 JSON 后刷新页面
-9. **省考公告入口**：读取 `data/provincial_exam.json`，支持单/多官网与说明文字；详见 `data/README.md`
+9. **上岸信息渠道**：读取 `data/shore_info.json` 渲染地区链接，点击跳转官网；更新数据请编辑该 JSON 后刷新页面
+10. **省考公告入口**：读取 `data/provincial_exam.json`，支持单/多官网与说明文字；详见 `data/README.md`
