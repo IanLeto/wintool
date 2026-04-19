@@ -157,13 +157,15 @@ function initMediaShelf() {
   }
 
   function statusLabel(status) {
-    return status === "watched" ? "看过" : (status === "unwatched" ? "没看过" : "未标注");
+    return status === "watched" ? "已完成" : (status === "unwatched" ? "未完成" : "未标注");
   }
 
   function categoryLabel(category) {
     if (category === "movie") return "电影";
     if (category === "tv") return "电视剧";
     if (category === "anime") return "动漫";
+    if (category === "game") return "游戏";
+    if (category === "book") return "书籍";
     return "未分类";
   }
 
@@ -196,14 +198,19 @@ function initMediaShelf() {
     const movie = list.filter((x) => x.category === "movie").length;
     const tv = list.filter((x) => x.category === "tv").length;
     const anime = list.filter((x) => x.category === "anime").length;
-    summaryEl.innerHTML = `
-      <span class="media-pill">共 ${list.length} 条</span>
-      <span class="media-pill">电影 ${movie}</span>
-      <span class="media-pill">电视剧 ${tv}</span>
-      <span class="media-pill">动漫 ${anime}</span>
-      <span class="media-pill is-watched">看过 ${watched}</span>
-      <span class="media-pill is-unwatched">没看过 ${unwatched}</span>
-    `;
+    const game = list.filter((x) => x.category === "game").length;
+    const book = list.filter((x) => x.category === "book").length;
+    
+    let pills = [`共 ${list.length} 条`];
+    if (movie > 0) pills.push(`电影 ${movie}`);
+    if (tv > 0) pills.push(`电视剧 ${tv}`);
+    if (anime > 0) pills.push(`动漫 ${anime}`);
+    if (game > 0) pills.push(`游戏 ${game}`);
+    if (book > 0) pills.push(`书籍 ${book}`);
+    pills.push(`<span class="is-watched">已完成 ${watched}</span>`);
+    pills.push(`<span class="is-unwatched">未完成 ${unwatched}</span>`);
+    
+    summaryEl.innerHTML = pills.map(p => `<span class="media-pill">${p}</span>`).join('');
   }
 
   function renderList() {
@@ -262,6 +269,409 @@ function initMediaShelf() {
   sourceSel.addEventListener("change", fetchItems);
 
   fetchItems();
+}
+
+function promptBankSuggestFilename() {
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  return `新提示词-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}.md`;
+}
+
+function initPromptBank() {
+  const root = document.querySelector("[data-prompt-bank]");
+  if (!root) return;
+
+  const toolId = root.dataset.toolId || "prompt_bank";
+  const refreshBtn = root.querySelector(".prompt-bank-refresh");
+  const filterInput = root.querySelector(".prompt-bank-filter");
+  const listWrap = root.querySelector(".prompt-bank-list-wrap");
+  const newNameInput = root.querySelector(".prompt-bank-new-name");
+  const newBtn = root.querySelector(".prompt-bank-new");
+  const currentEl = root.querySelector("[data-prompt-current]");
+  const bodyEl = root.querySelector(".prompt-bank-body");
+  const saveBtn = root.querySelector(".prompt-bank-save");
+  const deleteBtn = root.querySelector(".prompt-bank-delete");
+  const statusEl = root.querySelector(".prompt-bank-status");
+
+  let files = [];
+  /** @type {string | null} */
+  let activeFile = null;
+  /** @type {string | null} */
+  let lastSavedSnapshot = null;
+
+  function esc(s) {
+    const d = document.createElement("div");
+    d.textContent = s ?? "";
+    return d.innerHTML;
+  }
+
+  function setStatus(msg, isErr) {
+    statusEl.textContent = msg || "";
+    statusEl.style.color = isErr ? "var(--danger)" : "var(--muted)";
+  }
+
+  function isDirty() {
+    if (!activeFile) return (bodyEl.value || "").trim().length > 0;
+    return bodyEl.value !== lastSavedSnapshot;
+  }
+
+  function filteredFiles() {
+    const q = (filterInput.value || "").trim().toLowerCase();
+    if (!q) return files;
+    return files.filter((f) => f.toLowerCase().includes(q));
+  }
+
+  function renderList() {
+    const list = filteredFiles();
+    if (!list.length) {
+      listWrap.innerHTML =
+        '<p class="text-viewer-placeholder" style="margin:0.5rem">暂无匹配文件。</p>';
+      return;
+    }
+    listWrap.innerHTML = list
+      .map((f) => {
+        const active = f === activeFile ? " is-active" : "";
+        const enc = encodeURIComponent(f);
+        return `<button type="button" class="prompt-bank-file-btn${active}" data-file="${enc}">${esc(f)}</button>`;
+      })
+      .join("");
+  }
+
+  async function loadList(selectName) {
+    setStatus("加载列表…");
+    try {
+      const res = await fetch(`/api/tools/${encodeURIComponent(toolId)}/list`);
+      const data = await res.json();
+      if (!data.ok) {
+        setStatus(data.error || "列表失败", true);
+        return;
+      }
+      files = data.files || [];
+      renderList();
+      const pick =
+        selectName && files.includes(selectName)
+          ? selectName
+          : activeFile && files.includes(activeFile)
+            ? activeFile
+            : null;
+      if (pick) await openFile(pick, true);
+      else if (files.length) await openFile(files[0], true);
+      else {
+        activeFile = null;
+        currentEl.textContent = "（未选择）";
+        bodyEl.value = "";
+        lastSavedSnapshot = "";
+        setStatus("目录为空，可在左侧填写新文件名后保存");
+      }
+    } catch (err) {
+      setStatus("请求失败: " + err.message, true);
+    }
+  }
+
+  async function openFile(name, force) {
+    if (!force && isDirty()) {
+      // eslint-disable-next-line no-alert
+      if (!window.confirm("当前内容未保存，确定切换文件？")) return;
+    }
+    setStatus("读取…");
+    try {
+      const res = await fetch(
+        `/api/tools/${encodeURIComponent(toolId)}/content?file=${encodeURIComponent(name)}`
+      );
+      const data = await res.json();
+      if (!data.ok) {
+        setStatus(data.error || "读取失败", true);
+        return;
+      }
+      activeFile = data.file;
+      bodyEl.value = data.content ?? "";
+      lastSavedSnapshot = bodyEl.value;
+      currentEl.textContent = activeFile;
+      renderList();
+      setStatus("");
+    } catch (err) {
+      setStatus("请求失败: " + err.message, true);
+    }
+  }
+
+  async function saveCurrent() {
+    let name = activeFile || (newNameInput.value || "").trim();
+    if (!name) {
+      name = promptBankSuggestFilename();
+      newNameInput.value = name;
+    }
+    setStatus("保存中…");
+    try {
+      const res = await fetch(`/api/tools/${encodeURIComponent(toolId)}/save`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ file: name, content: bodyEl.value }),
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        setStatus(data.error || "保存失败", true);
+        return;
+      }
+      activeFile = data.file;
+      currentEl.textContent = activeFile;
+      lastSavedSnapshot = bodyEl.value;
+      newNameInput.value = "";
+      await loadList(activeFile);
+      setStatus("已保存");
+    } catch (err) {
+      setStatus("请求失败: " + err.message, true);
+    }
+  }
+
+  async function deleteCurrent() {
+    if (!activeFile) {
+      setStatus("没有选中的文件", true);
+      return;
+    }
+    // eslint-disable-next-line no-alert
+    if (!window.confirm(`确定删除文件「${activeFile}」？不可恢复。`)) return;
+    setStatus("删除中…");
+    try {
+      const res = await fetch(`/api/tools/${encodeURIComponent(toolId)}/delete`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ file: activeFile }),
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        setStatus(data.error || "删除失败", true);
+        return;
+      }
+      activeFile = null;
+      bodyEl.value = "";
+      lastSavedSnapshot = "";
+      currentEl.textContent = "（未选择）";
+      await loadList(null);
+      setStatus("已删除");
+    } catch (err) {
+      setStatus("请求失败: " + err.message, true);
+    }
+  }
+
+  function createNew() {
+    if (isDirty()) {
+      // eslint-disable-next-line no-alert
+      if (!window.confirm("当前编辑未保存，确定新建？")) return;
+    }
+    activeFile = null;
+    bodyEl.value = "";
+    lastSavedSnapshot = "";
+    newNameInput.value = promptBankSuggestFilename();
+    newNameInput.placeholder = "可改文件名；留空则保存时自动生成";
+    currentEl.textContent = `将保存为：${newNameInput.value}`;
+    setStatus("已填入默认文件名，可直接在右侧粘贴内容后点「保存」");
+    renderList();
+  }
+
+  refreshBtn.addEventListener("click", () => loadList(activeFile));
+  filterInput.addEventListener("input", renderList);
+  listWrap.addEventListener("click", (e) => {
+    const btn = e.target.closest(".prompt-bank-file-btn");
+    const raw = btn?.getAttribute("data-file");
+    if (!btn || raw == null || raw === "") return;
+    let name;
+    try {
+      name = decodeURIComponent(raw);
+    } catch {
+      return;
+    }
+    openFile(name, false);
+  });
+  saveBtn.addEventListener("click", () => saveCurrent());
+  deleteBtn.addEventListener("click", () => deleteCurrent());
+  newBtn.addEventListener("click", () => createNew());
+
+  loadList(null);
+}
+
+function initExportDirStructure() {
+  const root = document.querySelector("[data-export-dir-structure]");
+  if (!root) return;
+
+  const toolId = root.dataset.toolId || "export_dir_structure";
+  const dirsEl = root.querySelector("[data-export-dirs]");
+  const shallowEl = root.querySelector("[data-export-shallow]");
+  const depthEl = root.querySelector("[data-export-depth]");
+  const treeEl = root.querySelector("[data-export-tree]");
+  const statsEl = root.querySelector("[data-export-stats]");
+  const preEl = root.querySelector("[data-export-preview-text]");
+  const metaEl = root.querySelector("[data-export-meta]");
+  const msgEl = root.querySelector("[data-export-msg]");
+  const copyBtn = root.querySelector("[data-export-copy]");
+  const previewBtn = root.querySelector("[data-export-preview]");
+  const saveBtn = root.querySelector("[data-export-save]");
+  const outputEl = root.querySelector("[data-export-output]");
+
+  let lastText = "";
+
+  function esc(s) {
+    const d = document.createElement("div");
+    d.textContent = s ?? "";
+    return d.innerHTML;
+  }
+
+  function setMsg(text, kind) {
+    msgEl.textContent = text || "";
+    msgEl.classList.remove("is-error", "is-ok", "is-info");
+    if (kind === "error") msgEl.classList.add("is-error");
+    if (kind === "ok") msgEl.classList.add("is-ok");
+    if (kind === "info") msgEl.classList.add("is-info");
+  }
+
+  function setMeta(data) {
+    if (!data) {
+      metaEl.textContent = "等待生成...";
+      return;
+    }
+    const stats = data.stats || {};
+    const parts = [];
+    if (data.lines != null) parts.push(`${data.lines} 行`);
+    if (stats.total_dirs != null) parts.push(`${stats.total_dirs} 个文件夹`);
+    if (stats.total_files != null) parts.push(`${stats.total_files} 个文件`);
+    if (data.errors?.length) parts.push(`⚠️ ${data.errors.length} 个错误`);
+    metaEl.textContent = parts.join(" · ") || "已生成";
+  }
+
+  async function doPreview() {
+    setMsg("");
+    preEl.textContent = "正在生成目录结构...";
+    copyBtn.disabled = true;
+    lastText = "";
+    setMeta(null);
+    previewBtn.disabled = true;
+    
+    try {
+      const maxDepth = shallowEl.checked ? 1 : (parseInt(depthEl.value) || 5);
+      
+      const res = await fetch(`/api/tools/${encodeURIComponent(toolId)}/preview`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dirs: dirsEl.value || "",
+          shallow: shallowEl.checked ? "1" : "0",
+          max_depth: maxDepth,
+          tree_format: treeEl.checked ? "1" : "0",
+          show_stats: statsEl.checked ? "1" : "0",
+        }),
+      });
+      
+      const data = await res.json();
+      
+      if (!data.ok) {
+        preEl.textContent = "❌ 生成失败";
+        const errorMsg = data.error || "生成失败";
+        const details = data.details ? "\n详情: " + data.details.join("; ") : "";
+        setMsg(errorMsg + details, "error");
+        setMeta(null);
+        return;
+      }
+      
+      lastText = data.text ?? "";
+      preEl.textContent = lastText || "（空结果）";
+      copyBtn.disabled = !lastText;
+      setMeta(data);
+      
+      // 显示转换信息
+      let messages = [];
+      if (data.conversions?.length) {
+        messages.push("✓ 路径已转换: " + data.conversions.length + " 个");
+      }
+      if (data.errors?.length) {
+        messages.push("⚠️ " + data.errors.join("; "));
+      }
+      if (!messages.length) {
+        messages.push("✓ 生成成功！可复制或保存到文件");
+      }
+      
+      setMsg(messages.join(" | "), data.errors?.length ? "error" : "ok");
+      
+    } catch (err) {
+      preEl.textContent = "❌ 请求失败";
+      setMsg("请求失败: " + err.message, "error");
+      setMeta(null);
+    } finally {
+      previewBtn.disabled = false;
+    }
+  }
+
+  previewBtn.addEventListener("click", () => doPreview());
+
+  copyBtn.addEventListener("click", async () => {
+    if (!lastText) return;
+    try {
+      await navigator.clipboard.writeText(lastText);
+      setMsg("✓ 已复制到剪贴板", "ok");
+      setTimeout(() => setMsg(""), 2000);
+    } catch (e) {
+      setMsg("复制失败: " + e.message, "error");
+    }
+  });
+
+  saveBtn.addEventListener("click", async () => {
+    const output = (outputEl.value || "").trim();
+    if (!output) {
+      setMsg("请先填写输出文件路径", "error");
+      return;
+    }
+    
+    setMsg("正在写入文件...", "info");
+    saveBtn.disabled = true;
+    
+    try {
+      const maxDepth = shallowEl.checked ? 1 : (parseInt(depthEl.value) || 5);
+      
+      const res = await fetch(`/api/tools/${encodeURIComponent(toolId)}/run`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dirs: dirsEl.value || "",
+          shallow: shallowEl.checked ? "1" : "0",
+          max_depth: maxDepth,
+          tree_format: treeEl.checked ? "1" : "0",
+          show_stats: statsEl.checked ? "1" : "0",
+          output,
+        }),
+      });
+      
+      const data = await res.json();
+      
+      if (!data.ok) {
+        setMsg(data.error || "写入失败", "error");
+        return;
+      }
+      
+      lastText = data.text ?? lastText;
+      if (lastText) {
+        preEl.textContent = lastText;
+        copyBtn.disabled = false;
+      }
+      
+      setMeta(data);
+      
+      let msg = `✓ 已写入 ${data.lines_written ?? 0} 行 → ${data.output}`;
+      if (data.errors?.length) {
+        msg += " | ⚠️ " + data.errors.join("; ");
+      }
+      setMsg(msg, data.errors?.length ? "error" : "ok");
+      
+    } catch (err) {
+      setMsg("请求失败: " + err.message, "error");
+    } finally {
+      saveBtn.disabled = false;
+    }
+  });
+
+  // 浅层模式切换时禁用深度输入
+  shallowEl.addEventListener("change", () => {
+    if (depthEl) {
+      depthEl.disabled = shallowEl.checked;
+    }
+  });
 }
 
 function initAiLibrary() {
@@ -808,8 +1218,11 @@ function initBodyWeight() {
 document.addEventListener("DOMContentLoaded", () => {
   initTextViewer();
   initMediaShelf();
+  initPromptBank();
+  initExportDirStructure();
   initAiLibrary();
   initBodyWeight();
+  initBatchExtract7z();
 
   document.body.addEventListener("click", async (e) => {
     const runBtn = e.target.closest(".btn-run");
@@ -882,3 +1295,241 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// ==================== 批量7z解压工具 ====================
+function initBatchExtract7z() {
+  const root = document.querySelector("[data-batch-extract-7z]");
+  if (!root) return;
+
+  const toolId = root.dataset.toolId || "batch_extract_7z";
+  
+  // 表单元素
+  const sourceInput = root.querySelector("[data-batch-7z-source]");
+  const passwordInput = root.querySelector("[data-batch-7z-password]");
+  const depthInput = root.querySelector("[data-batch-7z-depth]");
+  const deleteCheckbox = root.querySelector("[data-batch-7z-delete]");
+  const skipCheckbox = root.querySelector("[data-batch-7z-skip]");
+  
+  // 按钮
+  const scanBtn = root.querySelector("[data-batch-7z-scan]");
+  const startBtn = root.querySelector("[data-batch-7z-start]");
+  const stopBtn = root.querySelector("[data-batch-7z-stop]");
+  
+  // 显示区域
+  const scanResult = root.querySelector("[data-batch-7z-scan-result]");
+  const scanInfo = root.querySelector("[data-batch-7z-scan-info]");
+  const statsEl = root.querySelector("[data-batch-7z-stats]");
+  const currentFileEl = root.querySelector("[data-current-file]");
+  const currentStageEl = root.querySelector("[data-current-stage]");
+  const progressFill = root.querySelector("[data-batch-7z-progress-fill]");
+  const progressText = root.querySelector("[data-batch-7z-progress-text]");
+  const logsEl = root.querySelector("[data-batch-7z-logs]");
+  
+  let progressInterval = null;
+  
+  function escapeHtml(s) {
+    const d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
+  }
+  
+  function addLog(message, level = "info") {
+    const logItem = document.createElement("div");
+    logItem.className = `batch-7z-log-item batch-7z-log-${level}`;
+    logItem.textContent = message;
+    logsEl.appendChild(logItem);
+    logsEl.scrollTop = logsEl.scrollHeight;
+    
+    // 只保留最近50条
+    while (logsEl.children.length > 50) {
+      logsEl.removeChild(logsEl.firstChild);
+    }
+  }
+  
+  function updateStats(data) {
+    root.querySelector("[data-stat-total]").textContent = data.total || 0;
+    root.querySelector("[data-stat-success]").textContent = data.success || 0;
+    root.querySelector("[data-stat-skipped]").textContent = data.skipped || 0;
+    root.querySelector("[data-stat-failed]").textContent = data.failed || 0;
+    
+    currentFileEl.textContent = data.current_file || "等待开始...";
+    currentStageEl.textContent = data.stage || "-";
+    
+    // 更新进度条
+    const percent = data.total > 0 ? Math.round((data.processed / data.total) * 100) : 0;
+    progressFill.style.width = percent + "%";
+    progressText.textContent = percent + "%";
+    
+    // 显示日志
+    if (data.logs && data.logs.length > 0) {
+      data.logs.forEach(log => {
+        const time = log.time || "";
+        const msg = `[${time}] ${log.message}`;
+        addLog(msg, log.level || "info");
+      });
+    }
+  }
+  
+  function startProgressPolling() {
+    if (progressInterval) return;
+    
+    progressInterval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/tools/${toolId}/progress`);
+        const data = await res.json();
+        
+        updateStats(data);
+        
+        if (!data.running) {
+          stopProgressPolling();
+          startBtn.disabled = false;
+          stopBtn.disabled = true;
+          scanBtn.disabled = false;
+        }
+      } catch (err) {
+        console.error("获取进度失败:", err);
+      }
+    }, 1000);
+  }
+  
+  function stopProgressPolling() {
+    if (progressInterval) {
+      clearInterval(progressInterval);
+      progressInterval = null;
+    }
+  }
+  
+  // 扫描文件
+  scanBtn.addEventListener("click", async () => {
+    const source = sourceInput.value.trim();
+    if (!source) {
+      alert("请填写源目录");
+      return;
+    }
+    
+    scanBtn.disabled = true;
+    scanInfo.innerHTML = '<p class="batch-7z-loading">正在扫描...</p>';
+    scanResult.style.display = "block";
+    
+    try {
+      const res = await fetch(`/api/tools/${toolId}/scan`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ source })
+      });
+      
+      const data = await res.json();
+      
+      if (data.ok) {
+        let html = `<p class="batch-7z-success">✓ 找到 ${data.total} 个.7z文件</p>`;
+        
+        if (data.files && data.files.length > 0) {
+          html += '<ul class="batch-7z-file-list">';
+          data.files.forEach(f => {
+            html += `<li>${escapeHtml(f)}</li>`;
+          });
+          html += '</ul>';
+        }
+        
+        if (data.existing_dirs && data.existing_dirs.length > 0) {
+          html += `<p class="batch-7z-warning">⚠️ 已存在 ${data.existing_dirs.length} 个目录（将跳过）</p>`;
+        }
+        
+        scanInfo.innerHTML = html;
+        startBtn.disabled = data.total === 0;
+      } else {
+        scanInfo.innerHTML = `<p class="batch-7z-error">✗ ${escapeHtml(data.error)}</p>`;
+        startBtn.disabled = true;
+      }
+    } catch (err) {
+      scanInfo.innerHTML = `<p class="batch-7z-error">✗ 请求失败: ${escapeHtml(err.message)}</p>`;
+      startBtn.disabled = true;
+    } finally {
+      scanBtn.disabled = false;
+    }
+  });
+  
+  // 开始解压
+  startBtn.addEventListener("click", async () => {
+    const source = sourceInput.value.trim();
+    const password = passwordInput.value.trim();
+    const maxDepth = parseInt(depthInput.value) || 3;
+    const deleteOriginal = deleteCheckbox.checked;
+    const skipExisting = skipCheckbox.checked;
+    
+    if (!source) {
+      alert("请填写源目录");
+      return;
+    }
+    
+    if (!confirm("确定要开始批量解压吗？这可能需要较长时间。")) {
+      return;
+    }
+    
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+    scanBtn.disabled = true;
+    
+    // 清空日志
+    logsEl.innerHTML = '<div class="batch-7z-log-item batch-7z-log-info">开始解压任务...</div>';
+    
+    try {
+      const res = await fetch(`/api/tools/${toolId}/start`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          source,
+          password,
+          max_depth: maxDepth,
+          delete_original: deleteOriginal,
+          skip_existing: skipExisting
+        })
+      });
+      
+      const data = await res.json();
+      
+      if (data.ok) {
+        addLog("✓ 任务已启动", "success");
+        startProgressPolling();
+      } else {
+        addLog(`✗ 启动失败: ${data.error}`, "error");
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        scanBtn.disabled = false;
+      }
+    } catch (err) {
+      addLog(`✗ 请求失败: ${err.message}`, "error");
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+      scanBtn.disabled = false;
+    }
+  });
+  
+  // 停止解压
+  stopBtn.addEventListener("click", async () => {
+    if (!confirm("确定要停止解压吗？")) {
+      return;
+    }
+    
+    try {
+      const res = await fetch(`/api/tools/${toolId}/stop`, {
+        method: "POST"
+      });
+      
+      const data = await res.json();
+      
+      if (data.ok) {
+        addLog("⏹️ 正在停止...", "warning");
+      } else {
+        addLog(`✗ 停止失败: ${data.error}`, "error");
+      }
+    } catch (err) {
+      addLog(`✗ 请求失败: ${err.message}`, "error");
+    }
+  });
+  
+  // 页面卸载时停止轮询
+  window.addEventListener("beforeunload", () => {
+    stopProgressPolling();
+  });
+}

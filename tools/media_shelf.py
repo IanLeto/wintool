@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-工具：影视收藏 — 读取 data/media_shelf/ 下多个文件，统一展示电影/电视剧/动漫。
-支持「看过/没看过」标注，并提供简单筛选。
+工具：媒体收藏 — 读取 data/media_shelf/ 下多个JSON文件，统一展示影视和游戏作品。
+支持电影/电视剧/动漫/游戏等分类，以及「看过/玩过/未看/未玩」状态标注。
+只需将同结构的JSON文件放入目录，即可自动聚合展示。
 """
 from __future__ import annotations
 
@@ -31,6 +32,14 @@ _CATEGORY_ALIASES = {
     "动漫": "anime",
     "动画": "anime",
     "anime": "anime",
+    "游戏": "game",
+    "game": "game",
+    "games": "game",
+    "电子游戏": "game",
+    "书籍": "book",
+    "book": "book",
+    "books": "book",
+    "图书": "book",
 }
 
 _STATUS_ALIASES = {
@@ -39,6 +48,12 @@ _STATUS_ALIASES = {
     "看完": "watched",
     "watched": "watched",
     "done": "watched",
+    "完成": "watched",
+    "玩过": "watched",
+    "已玩": "watched",
+    "通关": "watched",
+    "读过": "watched",
+    "已读": "watched",
     "没看过": "unwatched",
     "没看": "unwatched",
     "未看": "unwatched",
@@ -46,10 +61,24 @@ _STATUS_ALIASES = {
     "待看": "unwatched",
     "unwatched": "unwatched",
     "todo": "unwatched",
+    "未玩": "unwatched",
+    "想玩": "unwatched",
+    "待玩": "unwatched",
+    "未读": "unwatched",
+    "想读": "unwatched",
 }
 
-_CATEGORY_LABEL = {"movie": "电影", "tv": "电视剧", "anime": "动漫"}
-_STATUS_LABEL = {"watched": "看过", "unwatched": "没看过"}
+_CATEGORY_LABEL = {
+    "movie": "电影",
+    "tv": "电视剧",
+    "anime": "动漫",
+    "game": "游戏",
+    "book": "书籍"
+}
+_STATUS_LABEL = {
+    "watched": "已完成",
+    "unwatched": "未完成"
+}
 
 
 def _normalize_category(raw: str | None) -> str | None:
@@ -216,6 +245,8 @@ def _stats(items: list[dict]) -> dict:
         "movie": by_category["movie"],
         "tv": by_category["tv"],
         "anime": by_category["anime"],
+        "game": by_category["game"],
+        "book": by_category["book"],
         "watched": by_status["watched"],
         "unwatched": by_status["unwatched"],
     }
@@ -223,16 +254,15 @@ def _stats(items: list[dict]) -> dict:
 
 class MediaShelfTool(BaseTool):
     TOOL_ID = "media_shelf"
-    TOOL_NAME = "影视收藏"
+    TOOL_NAME = "媒体收藏"
 
     @classmethod
     def get_form_html(cls) -> str:
-        suffixes = "、".join(sorted(s.replace(".", "") for s in _ALLOWED_SUFFIXES))
         return f"""
         <div class="tool-form media-shelf-form" data-media-shelf data-tool-id="{html.escape(cls.TOOL_ID)}">
             <p class="desc">
-                将多个影视清单文件放入 <code>{html.escape(_DATA_DIR)}</code>，点击刷新后自动聚合展示。
-                支持后缀：{html.escape(suffixes)}。
+                将多个JSON文件放入 <code>{html.escape(_DATA_DIR)}</code>，点击刷新后自动聚合展示。
+                <br>支持影视、游戏、书籍等多种媒体类型。只需将同结构的JSON文件放入目录即可。
             </p>
             <div class="media-shelf-toolbar">
                 <button type="button" class="media-shelf-refresh">刷新列表</button>
@@ -242,11 +272,13 @@ class MediaShelfTool(BaseTool):
                     <option value="movie">电影</option>
                     <option value="tv">电视剧</option>
                     <option value="anime">动漫</option>
+                    <option value="game">游戏</option>
+                    <option value="book">书籍</option>
                 </select>
                 <select class="media-shelf-filter-status" aria-label="状态筛选">
                     <option value="all">全部状态</option>
-                    <option value="watched">看过</option>
-                    <option value="unwatched">没看过</option>
+                    <option value="watched">已完成</option>
+                    <option value="unwatched">未完成</option>
                 </select>
                 <select class="media-shelf-filter-source" aria-label="来源文件筛选">
                     <option value="all">全部文件</option>
@@ -254,7 +286,7 @@ class MediaShelfTool(BaseTool):
             </div>
             <div class="media-shelf-summary"></div>
             <div class="media-shelf-list-wrap">
-                <p class="media-shelf-placeholder">正在加载影视列表…</p>
+                <p class="media-shelf-placeholder">正在加载媒体列表…</p>
             </div>
         </div>
         """

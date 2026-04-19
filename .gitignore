@@ -1,4 +1,9 @@
-# Compiled class file
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Compiled class file (Java)
 *.class
 
 # Log file
