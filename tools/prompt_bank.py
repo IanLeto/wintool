@@ -13,7 +13,7 @@ from flask import Blueprint, jsonify, request
 from .base import BaseTool
 
 _PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
-_DATA_DIR = os.path.join(_PROJECT_ROOT, "data", "prompt_bank")
+_DATA_DIR = os.path.join(_PROJECT_ROOT, "data", "prompt_library")
 _MAX_BYTES = 2 * 1024 * 1024
 _MAX_NAME_LEN = 240
 # 跨平台容易出问题的字符：替换为下划线，尽量不拦用户输入

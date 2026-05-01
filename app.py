@@ -22,7 +22,7 @@ def api_pick_folder():
     """仅本机：弹出系统文件夹选择，返回 WSL 风格路径。"""
     if not _is_localhost():
         return jsonify({"ok": False, "error": "仅本机可打开文件夹选择"}), 403
-    from path_picker import pick_folder_native
+    from scripts.path_picker import pick_folder_native
 
     p = pick_folder_native()
     if not p:
@@ -38,7 +38,7 @@ def api_pick_folder():
 @app.route("/api/path-presets", methods=["GET"])
 def api_path_presets():
     base = os.path.dirname(os.path.abspath(__file__))
-    fp = os.path.join(base, "data", "path_presets.json")
+    fp = os.path.join(base, "data", "common_paths.json")
     try:
         with open(fp, encoding="utf-8") as f:
             data = json.load(f)

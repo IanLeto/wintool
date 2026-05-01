@@ -19,9 +19,9 @@ if errorlevel 1 (
 
 echo 正在通过 WSL 启动 Wintool...
 if defined WSL_DISTRO (
-    wsl.exe -d "%WSL_DISTRO%" bash -lc "cd '%WSL_PROJECT%' && exec bash ./start_wintool_wsl.sh"
+    wsl.exe -d "%WSL_DISTRO%" bash -lc "cd '%WSL_PROJECT%' && exec bash ./startup/start_wintool_wsl.sh"
 ) else (
-    wsl.exe bash -lc "cd '%WSL_PROJECT%' && exec bash ./start_wintool_wsl.sh"
+    wsl.exe bash -lc "cd '%WSL_PROJECT%' && exec bash ./startup/start_wintool_wsl.sh"
 )
 
 set "ERR=%ERRORLEVEL%"

@@ -13,7 +13,7 @@ from flask import Blueprint, jsonify, request
 from .base import BaseTool
 
 _PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
-_TEXT_DIR = os.path.join(_PROJECT_ROOT, "data", "text_viewer")
+_TEXT_DIR = os.path.join(_PROJECT_ROOT, "data", "text_documents")
 _ALLOWED_SUFFIXES = {".txt", ".md", ".markdown", ".log", ".csv"}
 
 

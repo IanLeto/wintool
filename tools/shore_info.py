@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 
 from .base import BaseTool
 
-_DATA_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "shore_info.json")
+_DATA_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "exam_official_sites.json")
 
 
 def _is_safe_http_url(url: str) -> bool:
@@ -50,7 +50,7 @@ def _rows_to_items(rows):
 def _render_html(obj):
     parts = [
         '<div class="tool-form shore-tool-form">',
-        '<p class="desc">点击下方地区名称，在新标签页打开对应官网。数据来自项目内 <code>data/shore_info.json</code>，修改该文件后刷新页面即可。</p>',
+        '<p class="desc">点击下方地区名称，在新标签页打开对应官网。数据来自项目内 <code>data/exam_official_sites.json</code>，修改该文件后刷新页面即可。</p>',
     ]
     if "更新时间" in obj and obj["更新时间"] is not None:
         parts.append(

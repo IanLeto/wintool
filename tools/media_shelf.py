@@ -17,7 +17,7 @@ from flask import Blueprint, jsonify, request
 from .base import BaseTool
 
 _PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
-_DATA_DIR = os.path.join(_PROJECT_ROOT, "data", "media_shelf")
+_DATA_DIR = os.path.join(_PROJECT_ROOT, "data", "media_collection")
 _ALLOWED_SUFFIXES = {".txt", ".md", ".markdown", ".csv", ".json"}
 
 _CATEGORY_ALIASES = {
@@ -303,7 +303,7 @@ class MediaShelfTool(BaseTool):
                         "files": [],
                         "items": [],
                         "stats": _stats([]),
-                        "hint": "目录不存在，先创建 data/media_shelf/ 并放入清单文件。",
+                        "hint": "目录不存在，先创建 data/media_collection/ 并放入清单文件。",
                     }
                 )
 

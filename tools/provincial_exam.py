@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 from .base import BaseTool
 
 _DATA_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "data", "provincial_exam.json"
+    os.path.dirname(os.path.dirname(__file__)), "data", "exam_announcement_sites.json"
 )
 
 
@@ -95,7 +95,7 @@ def _render_region_card(region: str, urls: list, desc: str | None) -> str:
 def _render_html(obj: dict) -> str:
     parts = [
         '<div class="tool-form shore-tool-form provincial-tool-form">',
-        '<p class="desc">各省公务员考试公告相关入口。数据来自 <code>data/provincial_exam.json</code>；同一地区多个链接时，按钮文案尽量与「说明」中顿号分隔的条目对应。</p>',
+        '<p class="desc">各省公务员考试公告相关入口。数据来自 <code>data/exam_announcement_sites.json</code>；同一地区多个链接时，按钮文案尽量与「说明」中顿号分隔的条目对应。</p>',
     ]
     if obj.get("更新时间") is not None:
         parts.append(
