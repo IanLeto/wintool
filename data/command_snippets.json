@@ -1,0 +1,15 @@
+{
+  "snippets": [
+    {
+      "id": "example_sql",
+      "title": "示例SQL查询",
+      "type": "sql",
+      "content": "SELECT * FROM users WHERE created_at > '2024-01-01' LIMIT 10;",
+      "tags": [
+        "查询",
+        "用户"
+      ],
+      "created_at": "2026-05-08T16:45:23.222049"
+    }
+  ]
+}
