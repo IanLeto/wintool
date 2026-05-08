@@ -4,12 +4,33 @@ ian 自用的个人工具集，支持 macOS/WSL 环境 + 浏览器界面。
 
 ## 运行
 
+### 在线环境（有网络）
+
 ```bash
 pip install -r requirements.txt
 python app.py
 ```
 
 浏览器访问 http://localhost:5001
+
+### 离线环境（内网部署）
+
+**适用场景：** 内网环境、无网络连接、仅有 Python 基础环境
+
+```bash
+# 1. 在有网络的环境打包
+./scripts/package_offline.sh
+
+# 2. 传输生成的 zip 文件到内网
+# 3. 在内网解压并安装
+unzip -P 123 wintool_offline_*.zip
+./install_offline.sh
+
+# 4. 启动
+cd wintool && python3 app.py
+```
+
+**详细说明：** 查看 [离线部署快速指南](README_OFFLINE_QUICKSTART.md) 或 [完整文档](docs/offline_deployment.md)
 
 ## macOS 双击启动
 
