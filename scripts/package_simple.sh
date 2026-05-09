@@ -65,6 +65,7 @@ PACKAGES=(
     "blinker"
     "markupsafe"
     "pymysql"
+    "kafka"
 )
 
 echo ""
