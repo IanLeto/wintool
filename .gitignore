@@ -48,3 +48,6 @@ wintool_offline_*.zip
 *.bak
 *.backup
 *~
+
+# Code snippets (local only, not tracked)
+code_snippets/

@@ -126,15 +126,24 @@ rsync -a --exclude='temp_simple_package' \
 echo "✓ 项目文件复制完成"
 
 echo ""
-echo "步骤 3/3: 创建启动脚本..."
+echo "步骤 3/3: 复制启动脚本..."
 echo "----------------------------------------"
 
-# 创建简单的启动脚本
+# 复制统一的 run.sh 脚本
+if [[ -f "$PROJECT_DIR/run.sh" ]]; then
+    cp "$PROJECT_DIR/run.sh" "$TEMP_DIR/wintool/run.sh"
+    chmod +x "$TEMP_DIR/wintool/run.sh"
+    echo "✓ 已复制 run.sh"
+else
+    echo "✗ 未找到 run.sh，跳过"
+fi
+
+# 创建 run_simple.py（供 run.sh 调用）
 cat > "$TEMP_DIR/wintool/run_simple.py" << 'RUNSCRIPT'
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Wintool 简易启动脚本
+Wintool 打包环境启动脚本
 自动将 lib 目录添加到 Python 路径
 """
 import sys
@@ -238,8 +247,13 @@ if [ -f "$OUTPUT_FILE" ]; then
     echo ""
     echo "内网部署："
     echo "  1. 解压: unzip -P 123 $OUTPUT_FILE"
-    echo "  2. 运行: cd wintool && python3 run_simple.py"
+    echo "  2. 运行: cd wintool && ./run.sh"
     echo "  3. 访问: http://127.0.0.1:5001"
+    echo ""
+    echo "提示："
+    echo "  - 使用统一的 run.sh 脚本启动"
+    echo "  - 支持 ./run.sh stop 停止服务"
+    echo "  - 支持 ./run.sh restart 重启服务"
     echo ""
     echo "无需安装，解压即用！"
     echo "========================================="

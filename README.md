@@ -2,52 +2,68 @@
 
 ian 自用的个人工具集，支持 macOS/WSL 环境 + 浏览器界面。
 
-## 运行
+## 快速启动
 
-### 在线环境（有网络）
+### 统一启动脚本（推荐）
+
+**本地开发和内网部署都使用同一个脚本：**
 
 ```bash
+# 启动服务
+./run.sh
+
+# 停止服务
+./run.sh stop
+
+# 重启服务
+./run.sh restart
+```
+
+**特点：**
+- ✅ 自动检测环境（本地开发 / 内网打包）
+- ✅ 自动检测 Python（虚拟环境 / 系统 Python）
+- ✅ 自动检查依赖并安装
+- ✅ 自动打开浏览器
+- ✅ 支持 macOS / Linux / WSL
+
+### 首次使用
+
+```bash
+# 1. 安装依赖（仅本地开发需要）
 pip install -r requirements.txt
-python app.py
+
+# 2. 启动
+./run.sh
 ```
 
 浏览器访问 http://localhost:5001
 
-### 离线环境（内网部署）
+## 内网部署
 
-**适用场景：** 内网环境、无网络连接、仅有 Python 基础环境
-
-```bash
-# 1. 在有网络的环境打包
-./scripts/package_offline.sh
-
-# 2. 传输生成的 zip 文件到内网
-# 3. 在内网解压并安装
-unzip -P 123 wintool_offline_*.zip
-./install_offline.sh
-
-# 4. 启动
-cd wintool && python3 app.py
-```
-
-**详细说明：** 查看 [离线部署快速指南](README_OFFLINE_QUICKSTART.md) 或 [完整文档](docs/offline_deployment.md)
-
-## macOS 双击启动
-
-项目根目录已提供两个脚本：
-
-- `start_wintool.command`：双击启动服务，并自动打开浏览器
-- `stop_wintool.command`：双击停止服务
-
-首次使用如果无法直接双击执行，可在终端执行一次：
+### 打包
 
 ```bash
-chmod +x start_wintool.command stop_wintool.command
+# 在有网络的环境打包
+./scripts/package_simple.sh
 ```
 
-## Windows 桌面双击启动（项目在 WSL 内）
+### 部署
 
-1. 用记事本打开 **`windows/StartWintool.bat`**，把 `WSL_PROJECT` 改成你在 WSL 里的项目路径（如 `/home/你的用户名/workdir/wintool`）；若默认发行版不对，可设置 `WSL_DISTRO`。
+```bash
+# 1. 传输生成的 zip 文件到内网
+# 2. 解压（密码: 123）
+unzip -P 123 wintool_simple_*.zip
+
+# 3. 进入目录并启动
+cd wintool
+./run.sh
+```
+
+**说明：**
+- 打包后的压缩包包含所有依赖
+- 内网环境只需要 Python 3.7+
+- 使用统一的 `run.sh` 脚本启动
+- 无需任何安装步骤
 2. 将该 bat **复制到 Windows 桌面**（或在桌面建快捷方式指向它），双击即可：通过 `wsl.exe` 运行仓库根目录的 **`start_wintool_wsl.sh`**（行为与 `start_wintool.command` 一致，并尝试用 Windows 默认浏览器打开 **http://127.0.0.1:5001**）。
 3. 更细的说明见 **`windows/README.md`**。
 
