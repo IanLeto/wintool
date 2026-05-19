@@ -77,13 +77,27 @@ def tool_page(tool_id):
 
 
 def _register_tool_routes():
-    """为每个工具注册 /api/tools/<tool_id>/... 路由。"""
+    """为每个工具注册 /api/tools/<tool_id>/... 路由。
+    使用错误隔离，确保单个工具的错误不会影响其他工具。
+    """
     from flask import Blueprint
+    import traceback
 
     for tool_cls in TOOLS:
-        bp = Blueprint(f"tool_{tool_cls.TOOL_ID}", __name__, url_prefix=f"/api/tools/{tool_cls.TOOL_ID}")
-        tool_cls.register_routes(bp)
-        app.register_blueprint(bp)
+        try:
+            bp = Blueprint(
+                f"tool_{tool_cls.TOOL_ID}", 
+                __name__, 
+                url_prefix=f"/api/tools/{tool_cls.TOOL_ID}"
+            )
+            tool_cls.register_routes(bp)
+            app.register_blueprint(bp)
+            print(f"✓ 工具已加载: {tool_cls.TOOL_NAME} ({tool_cls.TOOL_ID})")
+        except Exception as e:
+            print(f"✗ 工具加载失败: {tool_cls.TOOL_NAME} ({tool_cls.TOOL_ID})")
+            print(f"  错误: {str(e)}")
+            traceback.print_exc()
+            # 继续加载其他工具，不中断
 
 
 _register_tool_routes()

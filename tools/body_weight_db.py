@@ -175,7 +175,7 @@ def save_daily_log(log_date, **kwargs):
         cursor.execute("SELECT id FROM daily_logs WHERE date=%s", (log_date,))
         existing = cursor.fetchone()
         
-        fields = ['weight', 'sleep_hours', 'steps', 'fasting_168', 'sugar_free', 
+        fields = ['weight', 'sleep_hours', 'fasting_168', 'sugar_free', 
                   'exercise_minutes', 'binge', 'energy_level', 'hunger_level', 
                   'mood_level', 'notes']
         

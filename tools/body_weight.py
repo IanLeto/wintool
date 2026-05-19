@@ -64,16 +64,12 @@ class BodyWeightTool(BaseTool):
                         <button type="button" class="btn-secondary" id="load-date">加载</button>
                     </div>
                     <div class="form-row">
-                        <label>体重 (kg)：</label>
-                        <input type="number" step="0.1" id="log-weight" class="form-input" placeholder="70.5" />
+                        <label>体重 (斤)：</label>
+                        <input type="number" step="0.1" id="log-weight" class="form-input" placeholder="141.0" />
                     </div>
                     <div class="form-row">
                         <label>睡眠时长 (h)：</label>
                         <input type="number" step="0.5" id="log-sleep" class="form-input" placeholder="7.5" />
-                    </div>
-                    <div class="form-row">
-                        <label>步数：</label>
-                        <input type="number" id="log-steps" class="form-input" placeholder="8000" />
                     </div>
                     <div class="form-row">
                         <label>运动时长 (min)：</label>
@@ -198,10 +194,11 @@ class BodyWeightTool(BaseTool):
             try:
                 today = date.today()
                 
-                # 当前体重和7日均线
+                # 当前体重和7日均线 (转换为斤显示)
                 recent_logs = db.get_daily_logs(limit=1)
-                current_weight = recent_logs[0]['weight'] if recent_logs and recent_logs[0].get('weight') else None
-                ma7 = db.calculate_ma7()
+                current_weight = recent_logs[0]['weight'] * 2 if recent_logs and recent_logs[0].get('weight') else None
+                ma7_kg = db.calculate_ma7()
+                ma7 = ma7_kg * 2 if ma7_kg else None
                 
                 # 当前阶段
                 phase_info = db.get_phase_status()
@@ -223,11 +220,11 @@ class BodyWeightTool(BaseTool):
                         'days': days_running
                     }
                 
-                # 最近30天体重数据（用于图表）
+                # 最近30天体重数据（用于图表，转换为斤）
                 chart_logs = db.get_daily_logs(start_date=today - timedelta(days=29), end_date=today)
                 chart_data = {
                     'dates': [str(l['date']) for l in reversed(chart_logs)],
-                    'weights': [float(l['weight']) if l.get('weight') else None for l in reversed(chart_logs)]
+                    'weights': [float(l['weight']) * 2 if l.get('weight') else None for l in reversed(chart_logs)]
                 }
                 
                 return jsonify({
@@ -275,11 +272,10 @@ class BodyWeightTool(BaseTool):
                 # 准备数据
                 log_data = {}
                 if 'weight' in data and data['weight']:
-                    log_data['weight'] = float(data['weight'])
+                    # 将斤转换为kg存储 (1斤 = 0.5kg)
+                    log_data['weight'] = float(data['weight']) * 0.5
                 if 'sleep_hours' in data and data['sleep_hours']:
                     log_data['sleep_hours'] = float(data['sleep_hours'])
-                if 'steps' in data and data['steps']:
-                    log_data['steps'] = int(data['steps'])
                 if 'exercise_minutes' in data and data['exercise_minutes']:
                     log_data['exercise_minutes'] = int(data['exercise_minutes'])
                 
@@ -315,14 +311,15 @@ class BodyWeightTool(BaseTool):
                 logs = list(reversed(logs))
                 
                 dates = [str(l['date']) for l in logs]
-                weights = [float(l['weight']) if l.get('weight') else None for l in logs]
+                # 转换为斤显示
+                weights = [float(l['weight']) * 2 if l.get('weight') else None for l in logs]
                 
-                # 计算7日移动平均
+                # 计算7日移动平均（转换为斤）
                 ma7_values = []
                 for i, log in enumerate(logs):
                     if log.get('weight'):
-                        ma7 = db.calculate_ma7(log['date'])
-                        ma7_values.append(ma7)
+                        ma7_kg = db.calculate_ma7(log['date'])
+                        ma7_values.append(ma7_kg * 2 if ma7_kg else None)
                     else:
                         ma7_values.append(None)
                 
