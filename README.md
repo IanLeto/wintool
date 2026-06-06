@@ -1,99 +1,155 @@
-# wintool
+# Wintool - 前后端分离版本
 
-ian 自用的个人工具集，支持 macOS/WSL 环境 + 浏览器界面。
+一个基于 Vue 3 + Spring Boot 的文件处理工具集合。
 
-## 快速启动
+## 📁 项目结构
 
-### 统一启动脚本（推荐）
-
-**本地开发和内网部署都使用同一个脚本：**
-
-```bash
-# 启动服务
-./run.sh
-
-# 停止服务
-./run.sh stop
-
-# 重启服务
-./run.sh restart
+```
+wintool/
+├── legacy/          # 原始 Python Flask 项目（已保留）
+├── frontend/        # Vue 3 前端项目
+├── backend/         # Spring Boot 后端项目
+├── docs/            # 文档
+└── README.md        # 本文件
 ```
 
-**特点：**
-- ✅ 自动检测环境（本地开发 / 内网打包）
-- ✅ 自动检测 Python（虚拟环境 / 系统 Python）
-- ✅ 自动检查依赖并安装
-- ✅ 自动打开浏览器
-- ✅ 支持 macOS / Linux / WSL
+## 🚀 快速开始
 
-### 首次使用
+### 方式一：使用根目录脚本（推荐）
 
 ```bash
-# 1. 安装依赖（仅本地开发需要）
-pip install -r requirements.txt
+# 启动 Legacy 版本（重构前的 Python Flask 版本）
+./run_simply.sh
 
-# 2. 启动
-./run.sh
+# 打包 Legacy 版本（适用于内网部署）
+./package.sh
+
+# 启动前端（Vue 3）
+./run_frontend.sh
+
+# 启动后端（Spring Boot）
+./run.sh              # 开发模式
+./run.sh prod         # 生产模式
+./run.sh build        # 仅编译
+./run.sh clean        # 清理编译文件
 ```
 
-浏览器访问 http://localhost:5001
+### 方式二：手动启动
 
-## 内网部署
-
-### 打包
+#### 前端开发
 
 ```bash
-# 在有网络的环境打包
-./scripts/package_simple.sh
+cd frontend
+npm install          # 安装依赖（已完成）
+npm run dev          # 启动开发服务器 (http://localhost:5173)
+npm run build        # 生产构建
 ```
 
-### 部署
+#### 后端开发
 
 ```bash
-# 1. 传输生成的 zip 文件到内网
-# 2. 解压（密码: 123）
-unzip -P 123 wintool_simple_*.zip
-
-# 3. 进入目录并启动
-cd wintool
-./run.sh
+cd backend/wintool-backend
+mvn clean install    # 编译项目
+mvn spring-boot:run  # 启动服务 (http://localhost:8080)
 ```
 
-**说明：**
-- 打包后的压缩包包含所有依赖
-- 内网环境只需要 Python 3.7+
-- 使用统一的 `run.sh` 脚本启动
-- 无需任何安装步骤
-2. 将该 bat **复制到 Windows 桌面**（或在桌面建快捷方式指向它），双击即可：通过 `wsl.exe` 运行仓库根目录的 **`start_wintool_wsl.sh`**（行为与 `start_wintool.command` 一致，并尝试用 Windows 默认浏览器打开 **http://127.0.0.1:5001**）。
-3. 更细的说明见 **`windows/README.md`**。
+#### Legacy 版本
 
-## 可插拔工具架构
+```bash
+cd legacy
+./run.sh             # 启动 Python Flask 版本
+./package.sh         # 打包为独立部署包
+```
 
-- 每个工具是 `tools/` 目录下的独立模块，继承 `BaseTool`
-- 新工具只需实现 `TOOL_ID`、`TOOL_NAME`、`get_form_html()`、`register_routes(bp)`
-- 主程序自动发现并加载，无需修改 `app.py`
+## 📋 技术栈
 
-### 路径输入（少手打路径）
+### 前端
+- **框架**: Vue 3 (Composition API)
+- **构建工具**: Vite 5
+- **UI 框架**: Element Plus
+- **路由**: Vue Router 4
+- **状态管理**: Pinia
+- **HTTP 客户端**: Axios
 
-- 需要填目录/路径的工具，输入框下方提供 **选择文件夹…**（本机 `POST /api/pick-folder`，WSL 下优先弹出 **Windows 文件夹选择器**）、**粘贴 Windows 路径**（`C:\` → `/mnt/c/...`）。
-- **`data/path_presets.json`** 可配置常用路径芯片；说明见 `data/README.md`。
-- 请用 **http://127.0.0.1:5001** 访问，以便「选择文件夹」接口仅允许本机调用。
+### 后端
+- **框架**: Spring Boot 2.7.x
+- **数据访问**: MyBatis + MyBatis-Plus
+- **数据库**: MySQL 8.0 (可选)
+- **API 文档**: Swagger/OpenAPI 3
+- **工具**: Lombok, Hutool
 
-## 已有工具
+## 📝 环境要求
 
-### 文件管理工具
-1. **递归展平目录**：将指定目录下所有子目录中的文件移动到该目录根下，重名自动重命名
-2. **导出目录结构**：多目录递归或仅一级；先在页面预览树状文本，需要时再写入文件
-3. **按 JSON 重命名文件**：根据映射重命名并保留后缀
-4. **批量解压**：指定目录或单个压缩包路径，解压到各压缩包所在目录；成功则删除原文件；可选解压密码，错误则跳过；优先 7z，否则 zip/tar 标准库
+### 已安装
+- ✅ Node.js v22.14.0
+- ✅ npm 10.9.2
+- ✅ Java OpenJDK 18.0.2
+- ✅ Maven 3.6.3
 
-### 个人生活工具
-5. **体重管理**：BodyOS 个人减脂管理系统，支持每日记录、趋势分析、策略版本管理、数据导出；详见 `data/body_weight_README.md`
-6. **文本阅览**：快速浏览 `data/text_viewer/` 目录下的文本文件，支持页签切换和搜索过滤
-7. **影视收藏**：管理 `data/media_shelf/` 目录下的影视 JSON 文件，支持分类、状态筛选和搜索
-8. **AI内容库**：聚合浏览项目根目录下的 `ai回答/` 与 `ai语料/`，支持目录切换、文件筛选、正文预览
+### 可选安装
+- MySQL 8.0 (如果需要数据库功能)
 
-### 信息查询工具
-9. **上岸信息渠道**：读取 `data/shore_info.json` 渲染地区链接，点击跳转官网；更新数据请编辑该 JSON 后刷新页面
-10. **省考公告入口**：读取 `data/provincial_exam.json`，支持单/多官网与说明文字；详见 `data/README.md`
-11. **提示词收纳**：在 `data/prompt_bank/` 用本地文件保存常用提示词（后缀不限，不写后缀则默认 `.md`），网页内浏览、编辑、保存、删除；可与「影视收藏」配合使用（目录内附带格式转换提示词示例）
+## 🔧 开发指南
+
+### 前端开发
+1. 前端运行在 `http://localhost:5173`
+2. 自动代理后端 API 到 `http://localhost:8080`
+3. 支持热更新
+
+### 后端开发
+1. 后端运行在 `http://localhost:8080`
+2. API 文档访问: `http://localhost:8080/swagger-ui.html`
+3. 支持跨域请求
+
+## 📚 文档
+
+- [重构计划](./REFACTOR_PLAN.md) - 详细的重构计划和技术选型
+- [架构文档](./docs/ARCHITECTURE.md) - 系统架构说明（待创建）
+- [API 文档](./docs/API.md) - API 接口文档（待创建）
+
+## 📜 启动脚本说明
+
+### 根目录脚本
+
+| 脚本 | 用途 | 说明 |
+|------|------|------|
+| `run_simply.sh` | 启动 Legacy 版本 | 运行重构前的 Python Flask 版本 |
+| `package.sh` | 打包 Legacy 版本 | 创建可独立部署的压缩包（内网环境） |
+| `run_frontend.sh` | 启动前端 | 运行 Vue 3 开发服务器 |
+| `run.sh` | 启动后端 | 运行 Spring Boot 服务（支持多种模式） |
+
+### 注意事项
+
+- **Legacy 版本**：适用于内网环境，不依赖除 Python 外的任何内容
+- **前端**：需要 Node.js 和 npm
+- **后端**：需要 Java JDK 8+ 和 Maven
+
+## 🎯 当前状态
+
+### ✅ 已完成
+- [x] 环境检查和依赖安装
+- [x] 项目目录结构创建
+- [x] 原始项目备份到 legacy/
+- [x] Vue 3 前端项目初始化
+- [x] Spring Boot 后端项目初始化
+- [x] Element Plus 等前端依赖安装
+- [x] 创建统一启动脚本
+
+### 🔄 进行中
+- [ ] 配置前端路由和状态管理
+- [ ] 配置后端 Spring Boot 依赖
+- [ ] 实现第一个示例工具
+
+### 📅 待完成
+- [ ] 数据库设计和配置
+- [ ] 工具功能迁移
+- [ ] Docker 容器化
+- [ ] CI/CD 配置
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+## 📄 许可证
+
+MIT License

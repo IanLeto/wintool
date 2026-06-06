@@ -1,0 +1,82 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  application:
+    name: wintool-backend
+  
+  # 数据源配置（使用 H2 内存数据库，可选）
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:wintool
+    username: sa
+    password: 
+  
+  # H2 控制台（开发环境）
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  
+  # Jackson 配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+  
+  # 文件上传配置
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+# MyBatis Plus 配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# SpringDoc OpenAPI 配置
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  packages-to-scan: com.wintool.controller
+  paths-to-match: /**
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.wintool: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 应用配置
+wintool:
+  # 工作目录配置
+  workspace:
+    base-path: ${user.home}/wintool-workspace
+    temp-path: ${user.home}/wintool-workspace/temp
+  
+  # 工具配置
+  tools:
+    enabled: true

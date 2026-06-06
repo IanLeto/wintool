@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
-# Wintool Legacy 版本打包脚本
-# 用途：将重构前的代码打包成可独立部署的压缩包（内网环境）
+# Wintool Legacy 版本启动脚本
+# 用途：启动重构前的 Python Flask 版本
 
 set -euo pipefail
 
@@ -17,11 +17,10 @@ NC='\033[0m'
 
 echo_info() { echo -e "${GREEN}[INFO]${NC} $*"; }
 echo_error() { echo -e "${RED}[ERROR]${NC} $*"; }
-echo_warn() { echo -e "${YELLOW}[WARN]${NC} $*"; }
 echo_title() { echo -e "${BLUE}$*${NC}"; }
 
 echo_title "========================================="
-echo_title "  Wintool Legacy 版本打包工具"
+echo_title "  启动 Wintool Legacy 版本"
 echo_title "========================================="
 echo ""
 
@@ -32,19 +31,15 @@ if [[ ! -d "$LEGACY_DIR" ]]; then
     exit 1
 fi
 
-# 检查打包脚本
-if [[ ! -f "$LEGACY_DIR/package.sh" ]]; then
-    echo_error "未找到 legacy/package.sh"
+# 检查启动脚本
+if [[ ! -f "$LEGACY_DIR/run.sh" ]]; then
+    echo_error "未找到 legacy/run.sh"
     exit 1
 fi
 
-# 进入 legacy 目录并执行打包
+# 进入 legacy 目录并启动
 echo_info "切换到 legacy 目录..."
 cd "$LEGACY_DIR"
 
-echo_info "执行 legacy 打包脚本..."
-echo_warn "注意：打包将创建包含所有依赖的独立部署包"
-echo_warn "      适用于无网络的内网环境"
-echo ""
-
-exec bash package.sh "$@"
+echo_info "执行 legacy 启动脚本..."
+exec bash run.sh "$@"

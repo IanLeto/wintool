@@ -1,16 +1,12 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
-# Wintool 统一启动脚本
-# 适用于：本地开发、内网部署、打包环境
+# Wintool 后端启动脚本
+# 用途：启动 Spring Boot 后端服务
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-cd "$SCRIPT_DIR"
-
-PORT="${PORT:-5001}"
-URL="http://127.0.0.1:${PORT}"
-LOG_FILE="/tmp/wintool.log"
+BACKEND_DIR="$SCRIPT_DIR/backend/wintool-backend"
 
 # 颜色输出
 GREEN='\033[0;32m'
@@ -24,171 +20,91 @@ echo_error() { echo -e "${RED}[ERROR]${NC} $*"; }
 echo_warn() { echo -e "${YELLOW}[WARN]${NC} $*"; }
 echo_title() { echo -e "${BLUE}$*${NC}"; }
 
-# 停止已有进程
-stop_existing() {
-    if command -v lsof >/dev/null 2>&1; then
-        local pid=$(lsof -iTCP:"$PORT" -sTCP:LISTEN -t 2>/dev/null || true)
-        if [[ -n "$pid" ]]; then
-            echo_info "停止已有进程 (PID: $pid)..."
-            kill "$pid" 2>/dev/null || true
-            sleep 1
-        fi
-    fi
-}
+echo_title "========================================="
+echo_title "  启动 Wintool 后端 (Spring Boot)"
+echo_title "========================================="
+echo ""
 
-# 打开浏览器
-open_browser() {
-    local url="$1"
-    sleep 1
-    
-    # WSL 环境
-    if [[ -x /mnt/c/Windows/System32/cmd.exe ]]; then
-        /mnt/c/Windows/System32/cmd.exe /c start "" "$url" >/dev/null 2>&1 && return 0
-    fi
-    
-    # wslview
-    if command -v wslview >/dev/null 2>&1; then
-        wslview "$url" >/dev/null 2>&1 && return 0
-    fi
-    
-    # Linux
-    if command -v xdg-open >/dev/null 2>&1; then
-        xdg-open "$url" >/dev/null 2>&1 && return 0
-    fi
-    
-    # macOS
-    if command -v open >/dev/null 2>&1; then
-        open "$url" >/dev/null 2>&1 && return 0
-    fi
-    
-    echo_warn "无法自动打开浏览器，请手动访问: $url"
-}
+# 检查 Java
+if ! command -v java >/dev/null 2>&1; then
+    echo_error "未找到 Java"
+    echo_error "请先安装 Java JDK 8+: https://adoptium.net/"
+    exit 1
+fi
 
-# 检测 Python 环境
-detect_python() {
-    local python_bin=""
-    
-    # 1. 检查打包环境（内网部署）- 优先级最高
-    if [[ -f "run_simple.py" && -d "lib" ]]; then
-        echo_info "检测到打包环境（内网部署模式）"
-        echo_info "使用打包的依赖库: ./lib"
-        exec python3 run_simple.py
-        exit 0
-    fi
-    
-    # 2. 检查虚拟环境
-    if [[ -x ".venv/bin/python" ]]; then
-        python_bin=".venv/bin/python"
-        echo_info "使用虚拟环境: $python_bin"
-    elif command -v python3 >/dev/null 2>&1; then
-        python_bin="python3"
-        echo_info "使用系统 Python3: $(which python3)"
-    elif command -v python >/dev/null 2>&1; then
-        python_bin="python"
-        echo_info "使用系统 Python: $(which python)"
-    else
-        echo_error "未找到 Python 环境"
-        echo_error "请安装 Python 3.7+ 或创建虚拟环境"
-        exit 1
-    fi
-    
-    PYTHON_BIN="$python_bin"
-}
+echo_info "Java 版本: $(java -version 2>&1 | head -n 1)"
 
-# 检查依赖
-check_dependencies() {
-    echo_info "检查依赖..."
-    
-    if ! "$PYTHON_BIN" -c "import flask" 2>/dev/null; then
-        echo_warn "Flask 未安装"
-        
-        if [[ -f "requirements.txt" ]]; then
-            echo_info "尝试安装依赖..."
-            "$PYTHON_BIN" -m pip install -r requirements.txt || {
-                echo_error "依赖安装失败"
-                echo_error "请手动运行: pip install -r requirements.txt"
-                exit 1
-            }
-            echo_info "依赖安装完成"
-        else
-            echo_error "未找到 requirements.txt"
-            exit 1
-        fi
-    else
-        echo_info "依赖检查通过"
-    fi
-}
+# 检查 Maven
+if ! command -v mvn >/dev/null 2>&1; then
+    echo_error "未找到 Maven"
+    echo_error "请先安装 Maven: https://maven.apache.org/"
+    exit 1
+fi
+
+echo_info "Maven 版本: $(mvn --version | head -n 1)"
+echo ""
+
+# 检查后端目录
+if [[ ! -d "$BACKEND_DIR" ]]; then
+    echo_error "未找到 backend/wintool-backend 目录"
+    echo_error "请确保项目结构完整"
+    exit 1
+fi
+
+# 进入后端目录
+cd "$BACKEND_DIR"
+
+# 检查 pom.xml
+if [[ ! -f "pom.xml" ]]; then
+    echo_error "未找到 pom.xml"
+    echo_error "请确保 Spring Boot 项目已正确初始化"
+    exit 1
+fi
 
 # 启动服务
-start_service() {
-    echo_info "启动 Wintool (端口: $PORT)..."
-    
-    # 后台启动
-    nohup "$PYTHON_BIN" app.py >"$LOG_FILE" 2>&1 &
-    local pid=$!
-    
-    echo_info "等待服务启动..."
-    sleep 2
-    
-    # 检查服务是否启动成功
-    local max_retry=10
-    local retry=0
-    
-    while [[ $retry -lt $max_retry ]]; do
-        if curl -sf -o /dev/null "$URL" 2>/dev/null; then
-            echo ""
-            echo_title "========================================="
-            echo_title "  ✓ Wintool 启动成功！"
-            echo_title "========================================="
-            echo_info "访问地址: $URL"
-            echo_info "日志文件: $LOG_FILE"
-            echo_info "进程 PID: $pid"
-            echo_title "========================================="
-            echo ""
-            
-            open_browser "$URL"
-            return 0
+echo_info "启动后端服务..."
+echo_info "访问地址: http://localhost:8080"
+echo_info "API 文档: http://localhost:8080/swagger-ui.html"
+echo_title "========================================="
+echo ""
+
+# 根据参数选择启动方式
+case "${1:-dev}" in
+    dev|development)
+        echo_info "开发模式：使用 Maven 启动"
+        exec mvn spring-boot:run
+        ;;
+    prod|production)
+        echo_info "生产模式：编译并运行 JAR"
+        echo_info "编译项目..."
+        mvn clean package -DskipTests
+        
+        JAR_FILE=$(find target -name "*.jar" -not -name "*-sources.jar" | head -n 1)
+        if [[ -z "$JAR_FILE" ]]; then
+            echo_error "未找到编译后的 JAR 文件"
+            exit 1
         fi
         
-        retry=$((retry + 1))
-        sleep 1
-    done
-    
-    echo_error "启动失败，请查看日志: $LOG_FILE"
-    echo ""
-    echo "最近的日志内容:"
-    tail -20 "$LOG_FILE" 2>/dev/null || echo "无法读取日志文件"
-    exit 1
-}
-
-# 主流程
-main() {
-    echo_title "========================================="
-    echo_title "  Wintool 统一启动脚本"
-    echo_title "========================================="
-    echo ""
-    
-    stop_existing
-    detect_python
-    check_dependencies
-    start_service
-}
-
-# 处理参数
-case "${1:-}" in
-    stop)
-        echo_info "停止 Wintool..."
-        stop_existing
-        echo_info "已停止"
-        exit 0
+        echo_info "启动 JAR: $JAR_FILE"
+        exec java -jar "$JAR_FILE"
         ;;
-    restart)
-        echo_info "重启 Wintool..."
-        stop_existing
-        sleep 1
-        main
+    build)
+        echo_info "仅编译项目..."
+        exec mvn clean package -DskipTests
+        ;;
+    clean)
+        echo_info "清理项目..."
+        exec mvn clean
         ;;
     *)
-        main
+        echo_error "未知参数: $1"
+        echo ""
+        echo "用法: $0 [dev|prod|build|clean]"
+        echo ""
+        echo "  dev   - 开发模式启动 (默认)"
+        echo "  prod  - 生产模式启动 (编译后运行)"
+        echo "  build - 仅编译项目"
+        echo "  clean - 清理编译文件"
+        exit 1
         ;;
 esac
