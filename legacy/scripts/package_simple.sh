@@ -107,10 +107,11 @@ echo "----------------------------------------"
 
 cd "$PROJECT_DIR"
 
-# 复制项目文件
+# 复制项目文件（排除 data 目录，内网不需要）
 rsync -a --exclude='temp_simple_package' \
     --exclude='temp_package' \
     --exclude='data' \
+    --exclude='code_snippets' \
     --exclude='lib' \
     --exclude='*.pyc' \
     --exclude='__pycache__' \
@@ -122,6 +123,11 @@ rsync -a --exclude='temp_simple_package' \
     --exclude='.DS_Store' \
     --exclude='vendor' \
     "$PROJECT_DIR/" "$TEMP_DIR/wintool/"
+
+# 创建空的 data 目录（保持目录结构）
+mkdir -p "$TEMP_DIR/wintool/data"
+echo "# 数据目录" > "$TEMP_DIR/wintool/data/README.md"
+echo "此目录用于存放工具数据文件，内网部署时可根据需要添加。" >> "$TEMP_DIR/wintool/data/README.md"
 
 echo "✓ 项目文件复制完成"
 
