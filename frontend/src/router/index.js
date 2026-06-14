@@ -12,6 +12,11 @@ const routes = [
     name: 'Tool',
     component: () => import('../views/ToolPage.vue'),
     props: true
+  },
+  {
+    path: '/tools/directory-export',
+    name: 'DirectoryExport',
+    component: () => import('../views/tools/DirectoryExportTool.vue')
   }
 ]
 

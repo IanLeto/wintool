@@ -1,4 +1,8 @@
 com/wintool/config/CorsConfig.class
+com/wintool/controller/DirectoryController.class
+com/wintool/controller/DirectoryController$CreateStructureRequest.class
+com/wintool/controller/HealthController.class
+com/wintool/controller/DirectoryController$DirectoryNode.class
 com/wintool/WintoolApplication.class
 com/wintool/App.class
-com/wintool/controller/HealthController.class
+com/wintool/controller/DirectoryController$ExportRequest.class

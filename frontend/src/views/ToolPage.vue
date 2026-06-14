@@ -24,13 +24,21 @@
           <!-- Tool Interface Placeholder -->
           <div class="tool-interface">
             <div class="coming-soon">
-              <div class="coming-soon-icon">🚧</div>
-              <h2 class="coming-soon-title">功能开发中</h2>
+              <div class="coming-soon-icon">{{ hasImplementation(tool.id) ? '✅' : '🚧' }}</div>
+              <h2 class="coming-soon-title">
+                {{ hasImplementation(tool.id) ? '功能已实现' : '功能开发中' }}
+              </h2>
               <p class="coming-soon-text">
-                {{ tool.name }} 的具体功能正在开发中，敬请期待！
+                {{ hasImplementation(tool.id) ? '点击下方按钮开始使用' : tool.name + ' 的具体功能正在开发中，敬请期待！' }}
               </p>
+              
+              <!-- 启动按钮（如果已实现） -->
+              <button v-if="hasImplementation(tool.id)" class="launch-button" @click="goToTool">
+                🚀 启动工具
+              </button>
+              
               <div class="feature-list">
-                <h3 class="feature-title">计划功能：</h3>
+                <h3 class="feature-title">{{ hasImplementation(tool.id) ? '功能特点：' : '计划功能：' }}</h3>
                 <ul class="features">
                   <li v-for="feature in getPlannedFeatures(tool.id)" :key="feature">
                     {{ feature }}
@@ -70,6 +78,24 @@ const tool = computed(() => {
 
 const goBack = () => {
   router.push({ name: 'Home' })
+}
+
+const hasImplementation = (toolId) => {
+  // 已实现的工具列表
+  const implementedTools = ['export-dir']
+  return implementedTools.includes(toolId)
+}
+
+const goToTool = () => {
+  // 根据工具 ID 跳转到实际的工具页面
+  const toolRoutes = {
+    'export-dir': '/tools/directory-export'
+  }
+  
+  const routePath = toolRoutes[route.params.id]
+  if (routePath) {
+    router.push(routePath)
+  }
 }
 
 const getPlannedFeatures = (toolId) => {
@@ -346,6 +372,30 @@ const getPlannedFeatures = (toolId) => {
 .primary-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+}
+
+/* Launch Button */
+.launch-button {
+  padding: 1rem 2.5rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.launch-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+}
+
+.launch-button:active {
+  transform: translateY(-1px);
 }
 
 /* Animation */
