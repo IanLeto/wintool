@@ -47,43 +47,114 @@ echo_info "创建临时目录: $TEMP_DIR"
 mkdir -p "$TEMP_DIR"
 
 echo ""
-echo_info "开始复制文件..."
+echo_info "开始准备文件..."
+
+# 构建前端
+echo_info "  [1/6] 构建前端..."
+cd "$SCRIPT_DIR/frontend"
+if [[ ! -d "node_modules" ]]; then
+    echo_warn "      未找到 node_modules，正在安装依赖..."
+    npm install
+fi
+echo_info "      运行 npm run build..."
+npm run build
+echo_info "      前端构建完成"
+
+# 下载 Python 依赖
+echo_info "  [2/6] 下载 Python 依赖..."
+mkdir -p "$TEMP_DIR/python-packages"
+cd "$TEMP_DIR/python-packages"
+echo_info "      下载 Flask 及其依赖..."
+pip3 download Flask==2.3.0 Flask-CORS==4.0.0 Werkzeug==2.3.0 -d . 2>&1 | grep -v "Requirement already satisfied" || true
+echo_info "      Python 依赖下载完成（$(ls -1 | wc -l | tr -d ' ') 个包）"
 
 # 复制 Python 后端
-echo_info "  [1/5] 复制 Python 后端..."
+echo_info "  [3/6] 复制 Python 后端..."
 mkdir -p "$TEMP_DIR/backend-python"
 cp -r "$SCRIPT_DIR/backend-python/"* "$TEMP_DIR/backend-python/"
 
-# 复制前端（排除 node_modules）
-echo_info "  [2/5] 复制前端代码..."
-mkdir -p "$TEMP_DIR/frontend"
-rsync -av --exclude='node_modules' --exclude='dist' --exclude='.vite' \
-    "$SCRIPT_DIR/frontend/" "$TEMP_DIR/frontend/"
+# 复制前端构建产物
+echo_info "  [4/6] 复制前端构建产物..."
+mkdir -p "$TEMP_DIR/frontend/dist"
+cp -r "$SCRIPT_DIR/frontend/dist/"* "$TEMP_DIR/frontend/dist/"
 
-# 复制启动脚本
-echo_info "  [3/5] 复制启动脚本..."
-cp "$SCRIPT_DIR/inner.sh" "$TEMP_DIR/"
-chmod +x "$TEMP_DIR/inner.sh"
+# 复制启动脚本（简化版，只需 Python）
+echo_info "  [5/6] 创建启动脚本..."
+cat > "$TEMP_DIR/start.sh" << 'STARTEOF'
+#!/usr/bin/env bash
+# Wintool 内网版本启动脚本（纯 Python）
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+BACKEND_DIR="$SCRIPT_DIR/backend-python"
+
+# 颜色输出
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+echo_info() { echo -e "${GREEN}[INFO]${NC} $*"; }
+echo_error() { echo -e "${RED}[ERROR]${NC} $*"; }
+echo_title() { echo -e "${BLUE}$*${NC}"; }
+
+echo_title "========================================="
+echo_title "  启动 Wintool 内网版本"
+echo_title "  纯 Python 后端 + 静态前端"
+echo_title "========================================="
+echo ""
+
+# 检查 Python
+if ! command -v python3 >/dev/null 2>&1; then
+    echo_error "未找到 Python3"
+    echo_error "请先安装 Python 3.7+"
+    exit 1
+fi
+
+echo_info "Python 版本: $(python3 --version)"
+echo ""
+
+# 安装 Python 依赖（从本地包）
+echo_info "检查 Python 依赖..."
+if ! python3 -c "import flask" 2>/dev/null; then
+    echo_info "Flask 未安装，正在从本地包安装..."
+    cd "$SCRIPT_DIR/python-packages"
+    pip3 install --no-index --find-links=. Flask Flask-CORS Werkzeug --user
+    echo_info "依赖安装完成"
+else
+    echo_info "Flask 已安装，跳过"
+fi
+echo ""
+
+# 启动服务
+echo_info "启动服务..."
+cd "$BACKEND_DIR"
+python3 app.py
+
+STARTEOF
+chmod +x "$TEMP_DIR/start.sh"
 
 # 复制数据目录（如果存在）
 if [[ -d "$SCRIPT_DIR/code_snippets" ]]; then
-    echo_info "  [4/5] 复制数据文件..."
+    echo_info "  [6/6] 复制数据文件..."
     cp -r "$SCRIPT_DIR/code_snippets" "$TEMP_DIR/"
 else
-    echo_warn "  [4/5] 数据目录不存在，跳过"
+    echo_info "  [6/6] 创建数据目录..."
     mkdir -p "$TEMP_DIR/code_snippets"
 fi
 
 # 创建 README
-echo_info "  [5/5] 创建说明文档..."
+echo_info "  [7/7] 创建说明文档..."
 cat > "$TEMP_DIR/README_INNER.md" << 'EOF'
 # Wintool 内网版本使用说明
 
 ## 📦 包含内容
 
 - `backend-python/` - Python Flask 后端
-- `frontend/` - Vue 3 前端
-- `inner.sh` - 启动脚本
+- `frontend/dist/` - 前端构建产物（静态文件）
+- `python-packages/` - Python 依赖包（离线安装）
+- `start.sh` - 启动脚本
 - `code_snippets/` - 数据存储目录
 - `README_INNER.md` - 本说明文档
 
@@ -91,37 +162,52 @@ cat > "$TEMP_DIR/README_INNER.md" << 'EOF'
 
 ### 1. 环境要求
 
+**只需要 Python！**
 - **Python 3.7+** （必需）
-- **Node.js 16+** （必需）
 - **pip3** （Python 包管理器）
-- **npm** （Node.js 包管理器）
+
+**不需要：**
+- ❌ Node.js
+- ❌ npm
+- ❌ 前端依赖
 
 ### 2. 安装依赖
 
-#### Python 依赖
+**方式1：从本地包安装（推荐，无需网络）**
+```bash
+cd python-packages
+pip3 install --no-index --find-links=. Flask Flask-CORS Werkzeug --user
+```
+
+**方式2：从网络安装（如果内网有外网访问）**
 ```bash
 cd backend-python
 pip3 install -r requirements.txt --user
 ```
 
-#### 前端依赖
+或使用国内镜像：
 ```bash
-cd frontend
-npm install
+pip3 install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple --user
 ```
 
 ### 3. 启动服务
 
 ```bash
-chmod +x inner.sh
-./inner.sh
+chmod +x start.sh
+./start.sh
 ```
 
-启动后访问：http://localhost:5173
+或者直接运行：
+```bash
+cd backend-python
+python3 app.py
+```
+
+启动后访问：**http://localhost:8080**
 
 ### 4. 停止服务
 
-按 `Ctrl+C` 停止所有服务
+按 `Ctrl+C` 停止服务
 
 ## 📝 功能说明
 
@@ -134,25 +220,54 @@ chmod +x inner.sh
 ### 数据存储
 所有数据保存在 `code_snippets/snippets.json` 文件中
 
+### 技术架构
+- **后端**: Python Flask（提供 API + 静态文件服务）
+- **前端**: Vue 3 构建产物（已编译为静态 HTML/JS/CSS）
+- **数据**: JSON 文件存储
+- **依赖**: 离线 Python 包（无需网络）
+
 ## 🔧 故障排除
 
 ### Python 依赖安装失败
+
+**方法1：使用本地包（推荐）**
 ```bash
-# 使用国内镜像
+cd python-packages
+pip3 install --no-index --find-links=. Flask Flask-CORS Werkzeug --user
+```
+
+**方法2：使用国内镜像（需要网络）**
+```bash
 pip3 install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple --user
 ```
 
-### 前端依赖安装失败
+**方法3：手动安装**
 ```bash
-# 使用淘宝镜像
-npm install --registry=https://registry.npmmirror.com
+cd python-packages
+pip3 install *.whl --user
 ```
 
 ### 端口被占用
-- 后端端口：8080
-- 前端端口：5173
+默认端口：8080
 
-如果端口被占用，请先关闭占用端口的程序
+如果端口被占用，可以修改 `backend-python/app.py` 最后一行：
+```python
+app.run(host='0.0.0.0', port=8080, debug=False)  # 改为其他端口
+```
+
+### 无法访问
+1. 检查防火墙设置
+2. 确认 Python 服务正常启动
+3. 查看终端输出的错误信息
+
+## 💡 优势
+
+1. **完全离线** - 包含所有 Python 依赖，无需网络
+2. **极简部署** - 只需 Python，无需 Node.js
+3. **一键启动** - 运行 start.sh 即可
+4. **轻量级** - 压缩包小，启动快
+5. **功能完整** - 与外网版本功能一致
+6. **数据安全** - 本地文件存储
 
 ## 📞 技术支持
 
@@ -160,8 +275,12 @@ npm install --registry=https://registry.npmmirror.com
 
 ---
 
-**版本**: 1.0.0 (内网版)  
-**打包时间**: $(date '+%Y-%m-%d %H:%M:%S')
+**版本**: 1.0.0 (内网版 - 完全离线)  
+**打包时间**: $(date '+%Y-%m-%d %H:%M:%S')  
+**特点**: 
+- ✅ 无需 Node.js，前端已预编译
+- ✅ 包含所有 Python 依赖，完全离线安装
+- ✅ 只需 Python 3.7+，无需任何网络连接
 EOF
 
 echo ""

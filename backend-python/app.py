@@ -3,16 +3,25 @@
 """
 代码片段库 - Python Flask 后端
 用于内网环境，无需 JDK/Maven
+支持静态文件服务（前端构建产物）
 """
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import json
 import os
 from datetime import datetime
 from pathlib import Path
 
-app = Flask(__name__)
+# 前端构建产物目录
+FRONTEND_DIST = Path(__file__).parent.parent / "frontend" / "dist"
+
+# 如果存在 dist 目录，则提供静态文件服务
+if FRONTEND_DIST.exists():
+    app = Flask(__name__, static_folder=str(FRONTEND_DIST), static_url_path='')
+else:
+    app = Flask(__name__)
+
 CORS(app)  # 允许跨域
 
 # 数据文件路径
@@ -280,8 +289,32 @@ def health_check():
     return jsonify({
         'status': 'ok',
         'message': 'Wintool Python Backend is running',
-        'version': '1.0.0'
+        'version': '1.0.0',
+        'frontend': 'dist' if FRONTEND_DIST.exists() else 'dev'
     })
+
+
+# 前端路由支持（SPA）
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_frontend(path):
+    """提供前端静态文件服务"""
+    if not FRONTEND_DIST.exists():
+        return jsonify({
+            'error': '前端构建产物不存在',
+            'message': '请先运行: cd frontend && npm run build'
+        }), 404
+    
+    # API 路由不处理
+    if path.startswith('api/'):
+        return jsonify({'error': 'API endpoint not found'}), 404
+    
+    # 如果是文件请求，直接返回
+    if path and (FRONTEND_DIST / path).exists():
+        return send_from_directory(str(FRONTEND_DIST), path)
+    
+    # SPA 路由，返回 index.html
+    return send_from_directory(str(FRONTEND_DIST), 'index.html')
 
 
 if __name__ == '__main__':
@@ -289,6 +322,14 @@ if __name__ == '__main__':
     print("  Wintool 代码片段库 - Python 后端")
     print("  访问地址: http://localhost:8080")
     print("  数据文件: code_snippets/snippets.json")
+    
+    if FRONTEND_DIST.exists():
+        print("  前端模式: 生产环境（静态文件）")
+        print("  前端目录:", FRONTEND_DIST)
+    else:
+        print("  前端模式: 开发环境（需单独启动）")
+        print("  提示: 运行 'cd frontend && npm run build' 生成静态文件")
+    
     print("=" * 50)
     print()
     

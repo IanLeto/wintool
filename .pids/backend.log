@@ -222,3 +222,11 @@ Property 'mapperLocations' was not specified.
 2026-06-16 13:44:01 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=17m34s868ms).
 2026-06-16 14:29:02 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Retrograde clock change detected (housekeeper delta=29s839ms), soft-evicting connections from pool.
 2026-06-16 14:49:39 [http-nio-8080-exec-5] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
+2026-06-16 14:51:14 [http-nio-8080-exec-7] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
+2026-06-16 15:13:32 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=11m29s685ms).
+2026-06-16 15:55:59 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=30m27s90ms).
+2026-06-16 16:40:56 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=30m27s476ms).
+2026-06-16 17:11:48 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=10m51s425ms).
+2026-06-16 17:28:16 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=4m28s140ms).
+2026-06-16 17:33:33 [http-nio-8080-exec-9] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
+2026-06-16 17:34:51 [http-nio-8080-exec-1] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
