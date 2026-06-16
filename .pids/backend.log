@@ -1,7 +1,0 @@
-[0;34m=========================================[0m
-[0;34m  启动 Wintool 后端 (Spring Boot)[0m
-[0;34m=========================================[0m
-
-[0;32m[INFO][0m Java 版本: The operation couldn’t be completed. Unable to locate a Java Runtime.
-[0;31m[ERROR][0m 未找到 Maven
-[0;31m[ERROR][0m 请先安装 Maven: https://maven.apache.org/
