@@ -61,4 +61,4 @@ echo_info "API 代理: http://localhost:8080"
 echo_title "========================================="
 echo ""
 
-exec npm run dev
+npm run dev

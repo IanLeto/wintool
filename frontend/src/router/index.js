@@ -17,6 +17,11 @@ const routes = [
     path: '/tools/directory-export',
     name: 'DirectoryExport',
     component: () => import('../views/tools/DirectoryExportTool.vue')
+  },
+  {
+    path: '/tools/code-snippets',
+    name: 'CodeSnippets',
+    component: () => import('../views/tools/CodeSnippetsTool.vue')
   }
 ]
 

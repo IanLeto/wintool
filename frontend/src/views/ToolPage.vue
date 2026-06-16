@@ -82,14 +82,15 @@ const goBack = () => {
 
 const hasImplementation = (toolId) => {
   // 已实现的工具列表
-  const implementedTools = ['export-dir']
+  const implementedTools = ['export-dir', 'code-snippets']
   return implementedTools.includes(toolId)
 }
 
 const goToTool = () => {
   // 根据工具 ID 跳转到实际的工具页面
   const toolRoutes = {
-    'export-dir': '/tools/directory-export'
+    'export-dir': '/tools/directory-export',
+    'code-snippets': '/tools/code-snippets'
   }
   
   const routePath = toolRoutes[route.params.id]
@@ -149,10 +150,11 @@ const getPlannedFeatures = (toolId) => {
       '一键执行'
     ],
     'code-snippets': [
-      '代码片段管理',
-      '语法高亮',
-      '支持多种编程语言',
-      '快速插入'
+      '✅ 卡片式展示代码片段',
+      '✅ 支持 Go、Java、Python、SQL 等多种语言',
+      '✅ 快速搜索和筛选',
+      '✅ 一键复制代码',
+      '✅ 本地存储，数据安全'
     ],
     'text-viewer': [
       '查看文本文档',

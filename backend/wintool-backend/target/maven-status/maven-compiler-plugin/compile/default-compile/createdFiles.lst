@@ -1,8 +1,12 @@
 com/wintool/config/CorsConfig.class
+com/wintool/service/CodeSnippetService.class
 com/wintool/controller/DirectoryController.class
+com/wintool/App.class
+com/wintool/service/CodeSnippetService$1.class
+com/wintool/controller/DirectoryController$ExportRequest.class
+com/wintool/entity/CodeSnippet.class
+com/wintool/controller/CodeSnippetController.class
 com/wintool/controller/DirectoryController$CreateStructureRequest.class
 com/wintool/controller/HealthController.class
 com/wintool/controller/DirectoryController$DirectoryNode.class
 com/wintool/WintoolApplication.class
-com/wintool/App.class
-com/wintool/controller/DirectoryController$ExportRequest.class

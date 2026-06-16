@@ -72,7 +72,7 @@ echo ""
 case "${1:-dev}" in
     dev|development)
         echo_info "开发模式：使用 Maven 启动"
-        exec mvn spring-boot:run
+        mvn spring-boot:run
         ;;
     prod|production)
         echo_info "生产模式：编译并运行 JAR"
@@ -86,15 +86,15 @@ case "${1:-dev}" in
         fi
         
         echo_info "启动 JAR: $JAR_FILE"
-        exec java -jar "$JAR_FILE"
+        java -jar "$JAR_FILE"
         ;;
     build)
         echo_info "仅编译项目..."
-        exec mvn clean package -DskipTests
+        mvn clean package -DskipTests
         ;;
     clean)
         echo_info "清理项目..."
-        exec mvn clean
+        mvn clean
         ;;
     *)
         echo_error "未知参数: $1"

@@ -1,0 +1,12 @@
+{
+  "id": "20260513_174919",
+  "title": "子网",
+  "language": "golang",
+  "tags": [
+    "查询集群子网列表"
+  ],
+  "direction": "intranet_to_internet",
+  "content": "func SelectSubnetClusterInfoList(ctx context.Context, cluster string, name string,\n\tstatus *int, hash string) (map[string]*entity.SubnetClusterInfo, error) {\n\n\thash += \"SelectSubnetClusterInfoList\"\n\n\tif data, err := gcache.Get(ctx, hash); err == nil && data != nil {\n\t\tif result, ok := data.Val().(map[string]*entity.SubnetClusterInfo); ok {\n\t\t\treturn result, nil\n\t\t}\n\t}\n\n\tvar (\n\t\tlist []*entity.SubnetClusterInfo\n\t\terr  error\n\t)\n\n\tmodel := dao.SubnetClusterInfo.Ctx(ctx)\n\n\tif cluster != \"\" {\n\t\tmodel = model.Where(dao.SubnetClusterInfo.Columns().Cluster, cluster)\n\t}\n\tif name != \"\" {\n\t\tmodel = model.WhereLike(dao.SubnetClusterInfo.Columns().Name, \"%\"+name+\"%\")\n\t}\n\tif status != nil {\n\t\tmodel = model.Where(dao.SubnetClusterInfo.Columns().Status, *status)\n\t}\n\n\terr = model.OrderDesc(dao.SubnetClusterInfo.Columns().UpdateTime).Scan(&list)\n\tif err != nil {\n\t\treturn nil, err\n\t}\n\n\tresult := make(map[string]*entity.SubnetClusterInfo)\n\tfor _, item := range list {\n\t\tif _, exists := result[item.Name]; !exists {\n\t\t\tresult[item.Name] = item\n\t\t}\n\t}\n\n\tgcache.Set(ctx, hash, result, time.Duration(consts.DefaultCacheDuration))\n\treturn result, nil\n}",
+  "created_at": "2026-05-13 17:49:36",
+  "updated_at": "2026-05-13 17:49:36"
+}

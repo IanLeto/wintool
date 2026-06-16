@@ -42,4 +42,4 @@ echo_info "切换到 legacy 目录..."
 cd "$LEGACY_DIR"
 
 echo_info "执行 legacy 启动脚本..."
-exec bash run.sh "$@"
+bash run.sh "$@"
