@@ -73,16 +73,20 @@ echo_info "  [3/6] 复制 Python 后端..."
 mkdir -p "$TEMP_DIR/backend-python"
 cp -r "$SCRIPT_DIR/backend-python/"* "$TEMP_DIR/backend-python/"
 
-# 复制前端构建产物
+# 复制前端构建产物到 backend-python 同级目录
 echo_info "  [4/6] 复制前端构建产物..."
-mkdir -p "$TEMP_DIR/frontend/dist"
-cp -r "$SCRIPT_DIR/frontend/dist/"* "$TEMP_DIR/frontend/dist/"
+mkdir -p "$TEMP_DIR/backend-python/frontend/dist"
+cp -r "$SCRIPT_DIR/frontend/dist/"* "$TEMP_DIR/backend-python/frontend/dist/"
 
-# 复制启动脚本（简化版，只需 Python）
-echo_info "  [5/6] 创建启动脚本..."
+# 复制解压脚本
+echo_info "  [5/6] 复制解压脚本..."
+cp "$SCRIPT_DIR/extract_wheels.py" "$TEMP_DIR/"
+
+# 创建启动脚本（不使用 pip）
+echo_info "  [6/6] 创建启动脚本..."
 cat > "$TEMP_DIR/start.sh" << 'STARTEOF'
 #!/usr/bin/env bash
-# Wintool 内网版本启动脚本（纯 Python）
+# Wintool 内网版本启动脚本（纯 Python，无需 pip）
 
 set -euo pipefail
 
@@ -102,6 +106,7 @@ echo_title() { echo -e "${BLUE}$*${NC}"; }
 echo_title "========================================="
 echo_title "  启动 Wintool 内网版本"
 echo_title "  纯 Python 后端 + 静态前端"
+echo_title "  无需 pip，完全离线"
 echo_title "========================================="
 echo ""
 
@@ -115,45 +120,29 @@ fi
 echo_info "Python 版本: $(python3 --version)"
 echo ""
 
-# 安装 Python 依赖（从本地包）
-echo_info "检查 Python 依赖..."
-MISSING_DEPS=false
-
-# 检查 Flask
-if ! python3 -c "import flask" 2>/dev/null; then
-    echo_info "Flask 未安装"
-    MISSING_DEPS=true
-fi
-
-# 检查 Flask-CORS
-if ! python3 -c "import flask_cors" 2>/dev/null; then
-    echo_info "Flask-CORS 未安装"
-    MISSING_DEPS=true
-fi
-
-# 检查 Werkzeug
-if ! python3 -c "import werkzeug" 2>/dev/null; then
-    echo_info "Werkzeug 未安装"
-    MISSING_DEPS=true
-fi
-
-if [ "$MISSING_DEPS" = true ]; then
-    echo_info "正在从本地包安装依赖..."
-    cd "$SCRIPT_DIR/python-packages"
-    
-    # 尝试不同的安装方式
-    if pip3 install --no-index --find-links=. Flask Flask-CORS Werkzeug --user 2>/dev/null; then
-        echo_info "依赖安装完成（用户模式）"
-    elif pip3 install --no-index --find-links=. Flask Flask-CORS Werkzeug 2>/dev/null; then
-        echo_info "依赖安装完成（全局模式）"
-    else
-        echo_info "尝试直接安装 wheel 文件..."
-        pip3 install *.whl 2>/dev/null || pip3 install *.whl --user 2>/dev/null || true
-        echo_info "依赖安装完成"
+# 解压依赖包（如果 libs 目录不存在）
+if [[ ! -d "$SCRIPT_DIR/libs" ]]; then
+    echo_info "解压 Python 依赖包..."
+    cd "$SCRIPT_DIR"
+    if ! python3 extract_wheels.py; then
+        echo_error "解压依赖失败！"
+        exit 1
     fi
-else
-    echo_info "所有依赖已安装，跳过"
+    echo ""
 fi
+
+# 验证依赖
+echo_info "验证依赖..."
+cd "$SCRIPT_DIR"
+if ! python3 -c "import sys; sys.path.insert(0, 'libs'); import flask; import flask_cors; print('Flask 版本:', flask.__version__)" 2>&1; then
+    echo_error "Flask 导入失败！"
+    echo_error "libs 目录可能损坏，请删除后重试："
+    echo_error "  rm -rf libs"
+    echo_error "  ./start.sh"
+    exit 1
+fi
+
+echo_info "依赖验证成功"
 echo ""
 
 # 启动服务

@@ -6,15 +6,35 @@
 支持静态文件服务（前端构建产物）
 """
 
+import sys
+from pathlib import Path
+
+# 添加 libs 目录到 Python 路径（内网环境，无 pip）
+SCRIPT_DIR = Path(__file__).parent
+LIBS_DIR = SCRIPT_DIR.parent / "libs"
+
+if LIBS_DIR.exists():
+    sys.path.insert(0, str(LIBS_DIR))
+
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import json
 import os
 from datetime import datetime
-from pathlib import Path
 
 # 前端构建产物目录
-FRONTEND_DIST = Path(__file__).parent.parent / "frontend" / "dist"
+# 优先使用同级目录的 frontend/dist（内网打包后的结构）
+FRONTEND_DIST_INNER = Path(__file__).parent / "frontend" / "dist"
+# 其次使用上级目录的 frontend/dist（开发环境）
+FRONTEND_DIST_DEV = Path(__file__).parent.parent / "frontend" / "dist"
+
+# 选择存在的目录
+if FRONTEND_DIST_INNER.exists():
+    FRONTEND_DIST = FRONTEND_DIST_INNER
+elif FRONTEND_DIST_DEV.exists():
+    FRONTEND_DIST = FRONTEND_DIST_DEV
+else:
+    FRONTEND_DIST = FRONTEND_DIST_DEV  # 默认使用开发环境路径
 
 # 如果存在 dist 目录，则提供静态文件服务
 if FRONTEND_DIST.exists():

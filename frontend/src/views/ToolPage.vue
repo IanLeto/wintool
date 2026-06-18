@@ -82,7 +82,7 @@ const goBack = () => {
 
 const hasImplementation = (toolId) => {
   // 已实现的工具列表
-  const implementedTools = ['export-dir', 'code-snippets']
+  const implementedTools = ['export-dir', 'code-snippets', 'k8s-cluster']
   return implementedTools.includes(toolId)
 }
 
@@ -90,7 +90,8 @@ const goToTool = () => {
   // 根据工具 ID 跳转到实际的工具页面
   const toolRoutes = {
     'export-dir': '/tools/directory-export',
-    'code-snippets': '/tools/code-snippets'
+    'code-snippets': '/tools/code-snippets',
+    'k8s-cluster': '/tools/k8s-cluster'
   }
   
   const routePath = toolRoutes[route.params.id]
@@ -173,6 +174,16 @@ const getPlannedFeatures = (toolId) => {
       '多省份支持',
       '实时更新',
       '收藏功能'
+    ],
+    'k8s-cluster': [
+      '✅ 显示所有 K8s 集群',
+      '✅ 批量执行 kubectl 命令',
+      '✅ 7个预置命令模板',
+      '✅ 实时显示执行结果',
+      '✅ 成功/失败统计',
+      '✅ 一键复制输出',
+      '✅ 支持自定义命令',
+      '✅ 完全离线部署'
     ]
   }
   
