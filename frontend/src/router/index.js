@@ -22,6 +22,11 @@ const routes = [
     path: '/tools/code-snippets',
     name: 'CodeSnippets',
     component: () => import('../views/tools/CodeSnippetsTool.vue')
+  },
+  {
+    path: '/tools/k8s-cluster',
+    name: 'K8sCluster',
+    component: () => import('../views/tools/K8sClusterTool.vue')
   }
 ]
 

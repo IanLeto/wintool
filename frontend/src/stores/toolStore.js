@@ -67,6 +67,13 @@ export const useToolStore = defineStore('tool', {
         category: '开发工具'
       },
       {
+        id: 'k8s-cluster',
+        name: 'K8s 集群管理',
+        description: '管理多个 Kubernetes 集群，批量执行命令',
+        icon: '🚢',
+        category: '开发工具'
+      },
+      {
         id: 'text-viewer',
         name: '文本查看器',
         description: '查看和编辑文本文档',

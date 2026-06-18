@@ -117,13 +117,42 @@ echo ""
 
 # 安装 Python 依赖（从本地包）
 echo_info "检查 Python 依赖..."
+MISSING_DEPS=false
+
+# 检查 Flask
 if ! python3 -c "import flask" 2>/dev/null; then
-    echo_info "Flask 未安装，正在从本地包安装..."
+    echo_info "Flask 未安装"
+    MISSING_DEPS=true
+fi
+
+# 检查 Flask-CORS
+if ! python3 -c "import flask_cors" 2>/dev/null; then
+    echo_info "Flask-CORS 未安装"
+    MISSING_DEPS=true
+fi
+
+# 检查 Werkzeug
+if ! python3 -c "import werkzeug" 2>/dev/null; then
+    echo_info "Werkzeug 未安装"
+    MISSING_DEPS=true
+fi
+
+if [ "$MISSING_DEPS" = true ]; then
+    echo_info "正在从本地包安装依赖..."
     cd "$SCRIPT_DIR/python-packages"
-    pip3 install --no-index --find-links=. Flask Flask-CORS Werkzeug --user
-    echo_info "依赖安装完成"
+    
+    # 尝试不同的安装方式
+    if pip3 install --no-index --find-links=. Flask Flask-CORS Werkzeug --user 2>/dev/null; then
+        echo_info "依赖安装完成（用户模式）"
+    elif pip3 install --no-index --find-links=. Flask Flask-CORS Werkzeug 2>/dev/null; then
+        echo_info "依赖安装完成（全局模式）"
+    else
+        echo_info "尝试直接安装 wheel 文件..."
+        pip3 install *.whl 2>/dev/null || pip3 install *.whl --user 2>/dev/null || true
+        echo_info "依赖安装完成"
+    fi
 else
-    echo_info "Flask 已安装，跳过"
+    echo_info "所有依赖已安装，跳过"
 fi
 echo ""
 
@@ -137,15 +166,27 @@ chmod +x "$TEMP_DIR/start.sh"
 
 # 复制数据目录（如果存在）
 if [[ -d "$SCRIPT_DIR/code_snippets" ]]; then
-    echo_info "  [6/6] 复制数据文件..."
+    echo_info "  [6/7] 复制数据文件..."
     cp -r "$SCRIPT_DIR/code_snippets" "$TEMP_DIR/"
 else
-    echo_info "  [6/6] 创建数据目录..."
+    echo_info "  [6/7] 创建数据目录..."
     mkdir -p "$TEMP_DIR/code_snippets"
 fi
 
+# 复制 kubeconfig 示例文件
+echo_info "  [7/7] 复制 K8s 配置文件..."
+if [[ -f "$SCRIPT_DIR/kubeconfig" ]]; then
+    cp "$SCRIPT_DIR/kubeconfig" "$TEMP_DIR/"
+    echo_info "      已复制实际 kubeconfig 文件"
+elif [[ -f "$SCRIPT_DIR/kubeconfig.example" ]]; then
+    cp "$SCRIPT_DIR/kubeconfig.example" "$TEMP_DIR/"
+    echo_info "      已复制 kubeconfig 示例文件"
+else
+    echo_warn "      未找到 kubeconfig 文件，K8s 功能将使用系统默认配置"
+fi
+
 # 创建 README
-echo_info "  [7/7] 创建说明文档..."
+echo_info "  [8/8] 创建说明文档..."
 cat > "$TEMP_DIR/README_INNER.md" << 'EOF'
 # Wintool 内网版本使用说明
 

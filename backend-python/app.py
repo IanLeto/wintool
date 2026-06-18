@@ -294,6 +294,245 @@ def health_check():
     })
 
 
+# ==================== K8s 集群管理 API ====================
+
+import subprocess
+import time
+from pathlib import Path as PathLib
+
+# K8s 配置文件路径（与启动脚本在同一目录）
+KUBECONFIG_PATH = PathLib(__file__).parent.parent / "kubeconfig"
+
+
+def run_kubectl_command(command, context=None):
+    """
+    执行 kubectl 命令
+    
+    Args:
+        command: kubectl 命令（不包含 kubectl 前缀）
+        context: 集群上下文名称（可选）
+    
+    Returns:
+        dict: {success: bool, output: str, duration: int}
+    """
+    start_time = time.time()
+    
+    try:
+        # 构建完整命令
+        cmd = ['kubectl']
+        
+        # 如果指定了 kubeconfig 文件
+        if KUBECONFIG_PATH.exists():
+            cmd.extend(['--kubeconfig', str(KUBECONFIG_PATH)])
+        
+        # 如果指定了上下文
+        if context:
+            cmd.extend(['--context', context])
+        
+        # 添加用户命令
+        cmd.extend(command.split())
+        
+        # 执行命令
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=30  # 30秒超时
+        )
+        
+        duration = int((time.time() - start_time) * 1000)
+        
+        if result.returncode == 0:
+            return {
+                'success': True,
+                'output': result.stdout.strip(),
+                'duration': duration
+            }
+        else:
+            return {
+                'success': False,
+                'output': result.stderr.strip() or result.stdout.strip(),
+                'duration': duration
+            }
+    
+    except subprocess.TimeoutExpired:
+        duration = int((time.time() - start_time) * 1000)
+        return {
+            'success': False,
+            'output': '命令执行超时（30秒）',
+            'duration': duration
+        }
+    except Exception as e:
+        duration = int((time.time() - start_time) * 1000)
+        return {
+            'success': False,
+            'output': f'执行错误: {str(e)}',
+            'duration': duration
+        }
+
+
+@app.route('/api/k8s/clusters', methods=['GET'])
+def get_k8s_clusters():
+    """获取所有 K8s 集群列表"""
+    try:
+        # 构建命令
+        cmd = ['kubectl', 'config', 'get-contexts', '--no-headers']
+        
+        # 如果指定了 kubeconfig 文件
+        if KUBECONFIG_PATH.exists():
+            cmd.extend(['--kubeconfig', str(KUBECONFIG_PATH)])
+        
+        # 执行命令
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+        
+        if result.returncode != 0:
+            return jsonify({
+                'success': False,
+                'message': f'获取集群列表失败: {result.stderr}'
+            }), 500
+        
+        # 解析输出
+        clusters = []
+        lines = result.stdout.strip().split('\n')
+        
+        for line in lines:
+            if not line.strip():
+                continue
+            
+            parts = line.split()
+            if len(parts) < 3:
+                continue
+            
+            # 格式: [*] NAME CLUSTER AUTHINFO NAMESPACE
+            is_current = parts[0] == '*'
+            offset = 1 if is_current else 0
+            
+            cluster = {
+                'name': parts[offset],
+                'cluster': parts[offset + 1] if len(parts) > offset + 1 else '',
+                'user': parts[offset + 2] if len(parts) > offset + 2 else '',
+                'namespace': parts[offset + 3] if len(parts) > offset + 3 else '',
+                'current': is_current
+            }
+            clusters.append(cluster)
+        
+        return jsonify({
+            'success': True,
+            'data': clusters,
+            'total': len(clusters)
+        })
+    
+    except subprocess.TimeoutExpired:
+        return jsonify({
+            'success': False,
+            'message': '获取集群列表超时'
+        }), 500
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'获取集群列表失败: {str(e)}'
+        }), 500
+
+
+@app.route('/api/k8s/execute', methods=['POST'])
+def execute_k8s_command():
+    """在多个集群上批量执行 kubectl 命令"""
+    try:
+        data = request.get_json()
+        
+        # 验证参数
+        if not data.get('clusters') or not isinstance(data['clusters'], list):
+            return jsonify({
+                'success': False,
+                'message': '请选择至少一个集群'
+            }), 400
+        
+        if not data.get('command') or not data['command'].strip():
+            return jsonify({
+                'success': False,
+                'message': '命令不能为空'
+            }), 400
+        
+        clusters = data['clusters']
+        command = data['command'].strip()
+        
+        # 在每个集群上执行命令
+        results = []
+        for cluster_name in clusters:
+            result = run_kubectl_command(command, context=cluster_name)
+            results.append({
+                'cluster': cluster_name,
+                'command': command,
+                'success': result['success'],
+                'output': result['output'],
+                'duration': result['duration']
+            })
+        
+        return jsonify({
+            'success': True,
+            'data': results,
+            'total': len(results)
+        })
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'执行命令失败: {str(e)}'
+        }), 500
+
+
+@app.route('/api/k8s/switch-context', methods=['POST'])
+def switch_k8s_context():
+    """切换当前 K8s 上下文"""
+    try:
+        data = request.get_json()
+        
+        if not data.get('context'):
+            return jsonify({
+                'success': False,
+                'message': '上下文名称不能为空'
+            }), 400
+        
+        context = data['context']
+        
+        # 构建命令
+        cmd = ['kubectl', 'config', 'use-context', context]
+        
+        # 如果指定了 kubeconfig 文件
+        if KUBECONFIG_PATH.exists():
+            cmd.extend(['--kubeconfig', str(KUBECONFIG_PATH)])
+        
+        # 执行命令
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+        
+        if result.returncode == 0:
+            return jsonify({
+                'success': True,
+                'message': f'已切换到上下文: {context}'
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': f'切换上下文失败: {result.stderr}'
+            }), 500
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'切换上下文失败: {str(e)}'
+        }), 500
+
+
 # 前端路由支持（SPA）
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -317,10 +556,35 @@ def serve_frontend(path):
     return send_from_directory(str(FRONTEND_DIST), 'index.html')
 
 
+def find_available_port(start_port=8080, max_attempts=10):
+    """查找可用端口"""
+    import socket
+    for port in range(start_port, start_port + max_attempts):
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.bind(('0.0.0.0', port))
+                return port
+        except OSError:
+            continue
+    return None
+
+
 if __name__ == '__main__':
+    # 查找可用端口
+    port = find_available_port(8080)
+    
+    if port is None:
+        print("=" * 50)
+        print("  错误: 无法找到可用端口（尝试了 8080-8089）")
+        print("  请手动停止占用端口的程序，或修改代码指定其他端口")
+        print("=" * 50)
+        exit(1)
+    
     print("=" * 50)
     print("  Wintool 代码片段库 - Python 后端")
-    print("  访问地址: http://localhost:8080")
+    print(f"  访问地址: http://localhost:{port}")
+    if port != 8080:
+        print(f"  注意: 8080 端口被占用，已自动切换到 {port} 端口")
     print("  数据文件: code_snippets/snippets.json")
     
     if FRONTEND_DIST.exists():
@@ -333,4 +597,4 @@ if __name__ == '__main__':
     print("=" * 50)
     print()
     
-    app.run(host='0.0.0.0', port=8080, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=False)
