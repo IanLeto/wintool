@@ -66,6 +66,8 @@ mkdir -p "$TEMP_DIR/python-packages"
 cd "$TEMP_DIR/python-packages"
 echo_info "      下载 Flask 及其依赖..."
 pip3 download Flask==2.3.0 Flask-CORS==4.0.0 Werkzeug==2.3.0 -d . 2>&1 | grep -v "Requirement already satisfied" || true
+echo_info "      下载 kafka-python..."
+pip3 download kafka-python -d . 2>&1 | grep -v "Requirement already satisfied" || true
 echo_info "      Python 依赖下载完成（$(ls -1 | wc -l | tr -d ' ') 个包）"
 
 # 复制 Python 后端

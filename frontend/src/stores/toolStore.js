@@ -74,6 +74,13 @@ export const useToolStore = defineStore('tool', {
         category: '开发工具'
       },
       {
+        id: 'kafka-consumer',
+        name: 'Kafka 消费工具',
+        description: '连接内网 Kafka 集群，消费消息数据（支持 SASL 认证）',
+        icon: '📨',
+        category: '开发工具'
+      },
+      {
         id: 'text-viewer',
         name: '文本查看器',
         description: '查看和编辑文本文档',

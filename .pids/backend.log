@@ -45,7 +45,7 @@
 [INFO] 
 [INFO] --- spring-boot:2.7.18:run (default-cli) @ wintool-backend ---
 [INFO] Attaching agents: []
-10:51:56.160 [Thread-0] DEBUG org.springframework.boot.devtools.restart.classloader.RestartClassLoader - Created RestartClassLoader org.springframework.boot.devtools.restart.classloader.RestartClassLoader@9dc409a
+10:44:56.703 [Thread-0] DEBUG org.springframework.boot.devtools.restart.classloader.RestartClassLoader - Created RestartClassLoader org.springframework.boot.devtools.restart.classloader.RestartClassLoader@6fa56340
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -55,94 +55,31 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::               (v2.7.18)
 
-2026-06-16 10:51:56 [restartedMain] INFO  com.wintool.WintoolApplication - Starting WintoolApplication using Java 17.0.18 on iandeMacBook-Pro.local with PID 64868 (/Users/ian/workdir/wintool/backend/wintool-backend/target/classes started by ian in /Users/ian/workdir/wintool/backend/wintool-backend)
-2026-06-16 10:51:56 [restartedMain] DEBUG com.wintool.WintoolApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
-2026-06-16 10:51:56 [restartedMain] INFO  com.wintool.WintoolApplication - No active profile set, falling back to 1 default profile: "default"
-2026-06-16 10:51:56 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2026-06-16 10:51:56 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2026-06-16 10:51:57 [restartedMain] WARN  o.m.s.mapper.ClassPathMapperScanner - No MyBatis mapper was found in '[com.wintool]' package. Please check your configuration.
-2026-06-16 10:51:58 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2026-06-16 10:51:58 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-06-16 10:51:58 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
-2026-06-16 10:51:58 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2026-06-16 10:51:58 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1549 ms
-2026-06-16 10:51:58 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-06-16 10:51:58 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2026-06-16 10:51:58 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:wintool'
-2026-06-16 10:51:58 [restartedMain] INFO  c.wintool.service.CodeSnippetService - 数据文件不存在，将创建新文件: /Users/ian/workdir/wintool/backend/wintool-backend/code_snippets/snippets.json
-2026-06-16 10:51:58 [restartedMain] INFO  c.wintool.service.CodeSnippetService - 代码片段服务初始化完成，加载了 0 个片段
+2026-06-23 10:44:57 [restartedMain] INFO  com.wintool.WintoolApplication - Starting WintoolApplication using Java 17.0.18 on iandeMacBook-Pro.local with PID 14930 (/Users/ian/workdir/wintool/backend/wintool-backend/target/classes started by ian in /Users/ian/workdir/wintool/backend/wintool-backend)
+2026-06-23 10:44:57 [restartedMain] DEBUG com.wintool.WintoolApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
+2026-06-23 10:44:57 [restartedMain] INFO  com.wintool.WintoolApplication - No active profile set, falling back to 1 default profile: "default"
+2026-06-23 10:44:57 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-06-23 10:44:57 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-06-23 10:44:57 [restartedMain] WARN  o.m.s.mapper.ClassPathMapperScanner - No MyBatis mapper was found in '[com.wintool]' package. Please check your configuration.
+2026-06-23 10:44:58 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2026-06-23 10:44:58 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-06-23 10:44:58 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2026-06-23 10:44:58 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-06-23 10:44:58 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1351 ms
+2026-06-23 10:44:58 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-06-23 10:44:58 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-06-23 10:44:58 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:wintool'
+2026-06-23 10:44:58 [restartedMain] INFO  c.wintool.service.CodeSnippetService - 从文件加载了 2 个代码片段
+2026-06-23 10:44:58 [restartedMain] INFO  c.wintool.service.CodeSnippetService - 代码片段服务初始化完成，加载了 2 个片段
 Logging initialized using 'class org.apache.ibatis.logging.stdout.StdOutImpl' adapter.
 Property 'mapperLocations' was not specified.
  _ _   |_  _ _|_. ___ _ |    _ 
 | | |\/|_)(_| | |_\  |_)||_|_\ 
      /               |         
                         3.5.3.1 
-2026-06-16 10:51:59 [restartedMain] WARN  o.s.b.d.a.OptionalLiveReloadServer - Unable to start LiveReload server
-2026-06-16 10:51:59 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'; nested exception is org.springframework.boot.web.server.PortInUseException: Port 8080 is already in use
-2026-06-16 10:51:59 [restartedMain] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
-2026-06-16 10:51:59 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2026-06-16 10:51:59 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2026-06-16 10:51:59 [restartedMain] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
-2026-06-16 10:51:59 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLoggingListener - 
-
-Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
-2026-06-16 10:51:59 [restartedMain] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
-
-***************************
-APPLICATION FAILED TO START
-***************************
-
-Description:
-
-Web server failed to start. Port 8080 was already in use.
-
-Action:
-
-Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
-
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  8.647 s
-[INFO] Finished at: 2026-06-16T10:51:59+08:00
-[INFO] ------------------------------------------------------------------------
-ryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
-2026-06-16 10:51:55 [Thread-6] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2026-06-16 10:51:55 [Thread-6] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
- :: Spring Boot ::               (v2.7.18)
-
-2026-06-16 10:51:55 [restartedMain] INFO  com.wintool.WintoolApplication - Starting WintoolApplication using Java 17.0.18 on iandeMacBook-Pro.local with PID 32458 (/Users/ian/workdir/wintool/backend/wintool-backend/target/classes started by ian in /Users/ian/workdir/wintool/backend/wintool-backend)
-2026-06-16 10:51:55 [restartedMain] DEBUG com.wintool.WintoolApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
-2026-06-16 10:51:55 [restartedMain] INFO  com.wintool.WintoolApplication - No active profile set, falling back to 1 default profile: "default"
-2026-06-16 10:51:55 [restartedMain] WARN  o.m.s.mapper.ClassPathMapperScanner - No MyBatis mapper was found in '[com.wintool]' package. Please check your configuration.
-2026-06-16 10:51:55 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2026-06-16 10:51:55 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-06-16 10:51:55 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
-2026-06-16 10:51:55 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2026-06-16 10:51:55 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 422 ms
-2026-06-16 10:51:55 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
-2026-06-16 10:51:55 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
-2026-06-16 10:51:55 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:wintool'
-2026-06-16 10:51:55 [restartedMain] INFO  c.wintool.service.CodeSnippetService - 创建代码片段数据目录: /Users/ian/workdir/wintool/backend/wintool-backend/code_snippets
-2026-06-16 10:51:55 [restartedMain] INFO  c.wintool.service.CodeSnippetService - 数据文件不存在，将创建新文件: /Users/ian/workdir/wintool/backend/wintool-backend/code_snippets/snippets.json
-2026-06-16 10:51:55 [restartedMain] INFO  c.wintool.service.CodeSnippetService - 代码片段服务初始化完成，加载了 0 个片段
-Logging initialized using 'class org.apache.ibatis.logging.stdout.StdOutImpl' adapter.
-Property 'mapperLocations' was not specified.
- _ _   |_  _ _|_. ___ _ |    _ 
-| | |\/|_)(_| | |_\  |_)||_|_\ 
-     /               |         
-                        3.5.3.1 
-2026-06-16 10:51:56 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2026-06-16 10:51:56 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2026-06-16 10:51:56 [restartedMain] INFO  com.wintool.WintoolApplication - Started WintoolApplication in 0.732 seconds (JVM running for 3706.073)
-2026-06-16 10:51:56 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2026-06-23 10:44:59 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-06-23 10:44:59 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2026-06-23 10:44:59 [restartedMain] INFO  com.wintool.WintoolApplication - Started WintoolApplication in 3.179 seconds (JVM running for 3.621)
 
 ========================================
   Wintool Backend 启动成功！
@@ -150,139 +87,75 @@ Property 'mapperLocations' was not specified.
   API 文档: http://localhost:8080/swagger-ui.html
 ========================================
 
-2026-06-16 10:51:57 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 12 class path changes (12 additions, 0 deletions, 0 modifications)
-2026-06-16 10:51:57 [Thread-8] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
-2026-06-16 10:51:58 [Thread-8] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
-2026-06-16 10:51:58 [Thread-8] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
-2026-06-16 10:51:58 [Thread-8] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
- :: Spring Boot ::               (v2.7.18)
-
-2026-06-16 10:51:58 [restartedMain] INFO  com.wintool.WintoolApplication - Starting WintoolApplication using Java 17.0.18 on iandeMacBook-Pro.local with PID 32458 (/Users/ian/workdir/wintool/backend/wintool-backend/target/classes started by ian in /Users/ian/workdir/wintool/backend/wintool-backend)
-2026-06-16 10:51:58 [restartedMain] DEBUG com.wintool.WintoolApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
-2026-06-16 10:51:58 [restartedMain] INFO  com.wintool.WintoolApplication - No active profile set, falling back to 1 default profile: "default"
-2026-06-16 10:51:58 [restartedMain] WARN  o.m.s.mapper.ClassPathMapperScanner - No MyBatis mapper was found in '[com.wintool]' package. Please check your configuration.
-2026-06-16 10:51:58 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
-2026-06-16 10:51:58 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-06-16 10:51:58 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
-2026-06-16 10:51:58 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2026-06-16 10:51:58 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 243 ms
-2026-06-16 10:51:58 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
-2026-06-16 10:51:58 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
-2026-06-16 10:51:58 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:wintool'
-2026-06-16 10:51:58 [restartedMain] INFO  c.wintool.service.CodeSnippetService - 数据文件不存在，将创建新文件: /Users/ian/workdir/wintool/backend/wintool-backend/code_snippets/snippets.json
-2026-06-16 10:51:58 [restartedMain] INFO  c.wintool.service.CodeSnippetService - 代码片段服务初始化完成，加载了 0 个片段
-Logging initialized using 'class org.apache.ibatis.logging.stdout.StdOutImpl' adapter.
-Property 'mapperLocations' was not specified.
- _ _   |_  _ _|_. ___ _ |    _ 
-| | |\/|_)(_| | |_\  |_)||_|_\ 
-     /               |         
-                        3.5.3.1 
-2026-06-16 10:51:58 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2026-06-16 10:51:58 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
-2026-06-16 10:51:58 [restartedMain] INFO  com.wintool.WintoolApplication - Started WintoolApplication in 0.5 seconds (JVM running for 3708.573)
-2026-06-16 10:51:58 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-
-========================================
-  Wintool Backend 启动成功！
-  访问地址: http://localhost:8080
-  API 文档: http://localhost:8080/swagger-ui.html
-========================================
-
-2026-06-16 10:52:05 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-06-16 10:52:05 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2026-06-16 10:52:05 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
-2026-06-16 10:52:05 [http-nio-8080-exec-1] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 0
-2026-06-16 10:52:34 [http-nio-8080-exec-3] DEBUG c.wintool.service.CodeSnippetService - 保存 1 个代码片段到文件
-2026-06-16 10:52:34 [http-nio-8080-exec-3] INFO  c.wintool.service.CodeSnippetService - 创建代码片段: 子网分配域名
-2026-06-16 10:52:34 [http-nio-8080-exec-4] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 1
-2026-06-16 10:54:03 [http-nio-8080-exec-7] DEBUG c.wintool.service.CodeSnippetService - 保存 2 个代码片段到文件
-2026-06-16 10:54:03 [http-nio-8080-exec-7] INFO  c.wintool.service.CodeSnippetService - 创建代码片段: 查询子网列表
-2026-06-16 10:54:03 [http-nio-8080-exec-8] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
-2026-06-16 10:55:22 [http-nio-8080-exec-1] DEBUG c.wintool.service.CodeSnippetService - 保存 2 个代码片段到文件
-2026-06-16 10:55:22 [http-nio-8080-exec-1] INFO  c.wintool.service.CodeSnippetService - 更新代码片段: 子网分配域名
-2026-06-16 10:55:22 [http-nio-8080-exec-2] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
-2026-06-16 10:56:00 [http-nio-8080-exec-5] DEBUG c.wintool.service.CodeSnippetService - 保存 2 个代码片段到文件
-2026-06-16 10:56:00 [http-nio-8080-exec-5] INFO  c.wintool.service.CodeSnippetService - 更新代码片段: 查询子网列表
-2026-06-16 10:56:00 [http-nio-8080-exec-6] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
-2026-06-16 10:56:07 [http-nio-8080-exec-8] DEBUG c.wintool.service.CodeSnippetService - 保存 2 个代码片段到文件
-2026-06-16 10:56:07 [http-nio-8080-exec-8] INFO  c.wintool.service.CodeSnippetService - 更新代码片段: 子网分配域名
-2026-06-16 10:56:07 [http-nio-8080-exec-9] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
-2026-06-16 11:07:03 [http-nio-8080-exec-1] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
-2026-06-16 11:25:19 [http-nio-8080-exec-3] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
-2026-06-16 11:55:35 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=30m26s980ms).
-2026-06-16 12:47:33 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=30m27s617ms).
-2026-06-16 13:25:57 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=12m53s778ms).
-2026-06-16 13:44:01 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=17m34s868ms).
-2026-06-16 14:29:02 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Retrograde clock change detected (housekeeper delta=29s839ms), soft-evicting connections from pool.
-2026-06-16 14:49:39 [http-nio-8080-exec-5] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
-2026-06-16 14:51:14 [http-nio-8080-exec-7] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
-2026-06-16 15:13:32 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=11m29s685ms).
-2026-06-16 15:55:59 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=30m27s90ms).
-2026-06-16 16:40:56 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=30m27s476ms).
-2026-06-16 17:11:48 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=10m51s425ms).
-2026-06-16 17:28:16 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=4m28s140ms).
-2026-06-16 17:33:33 [http-nio-8080-exec-9] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
-2026-06-16 17:34:51 [http-nio-8080-exec-1] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
-2026-06-16 18:30:43 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=30m26s88ms).
-2026-06-16 18:47:35 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=16m52s469ms).
-2026-06-16 19:05:45 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=17m39s904ms).
-2026-06-16 19:21:59 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=15m43s955ms).
-2026-06-16 20:40:28 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=15m57s949ms).
-2026-06-16 20:58:59 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=18m895ms).
-2026-06-17 02:00:26 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=21m53s428ms).
-2026-06-17 03:00:53 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=1h27s512ms).
-2026-06-17 04:01:31 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=1h37s511ms).
-2026-06-17 05:02:43 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=1h41s968ms).
-2026-06-17 05:42:06 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=38m52s993ms).
-2026-06-17 06:03:34 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=21m27s994ms).
-2026-06-17 07:04:46 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=1h41s974ms).
-2026-06-17 07:59:01 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=53m45s84ms).
-2026-06-17 08:06:03 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=6m32s591ms).
-2026-06-17 08:31:15 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=25m11s565ms).
-2026-06-17 08:48:45 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Retrograde clock change detected (housekeeper delta=29s764ms), soft-evicting connections from pool.
-2026-06-17 09:19:45 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Retrograde clock change detected (housekeeper delta=29s815ms), soft-evicting connections from pool.
-2026-06-17 11:58:43 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=30m26s779ms).
-2026-06-17 12:15:26 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=16m42s814ms).
-2026-06-17 12:34:22 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=18m26s16ms).
-2026-06-17 12:51:38 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=16m46s25ms).
-2026-06-17 13:27:50 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=36m12s4ms).
-2026-06-17 13:53:15 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=24m54s996ms).
-2026-06-17 14:56:49 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=30m26s604ms).
-2026-06-17 16:49:17 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=17m57s398ms).
-2026-06-17 17:16:55 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=3m7s815ms).
-2026-06-17 17:22:02 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=4m36s716ms).
-2026-06-17 17:26:44 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=4m41s516ms).
-2026-06-17 17:31:54 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=4m40s586ms).
-2026-06-17 17:37:05 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=4m40s582ms).
-2026-06-17 17:41:45 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=4m40s579ms).
-2026-06-17 17:59:06 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=16m50s557ms).
-2026-06-17 18:41:40 [http-nio-8080-exec-3] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
-2026-06-17 19:21:37 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=4m709ms).
-2026-06-17 19:54:04 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=30m26s681ms).
-2026-06-17 20:11:17 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=15m39s557ms).
-2026-06-17 20:42:13 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=30m26s339ms).
-2026-06-17 21:44:10 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=30m26s639ms).
-2026-06-17 22:02:58 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=18m17s588ms).
-2026-06-17 22:13:12 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=9m43s991ms).
-2026-06-17 22:35:57 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=17m14s923ms).
-2026-06-17 22:59:42 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=17m15s225ms).
-2026-06-17 23:57:39 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=30m26s949ms).
-2026-06-18 00:14:07 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=8m57s516ms).
-2026-06-18 01:00:33 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=30m26s267ms).
-2026-06-18 01:31:42 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=17m8s929ms).
-2026-06-18 02:15:06 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=26m53s388ms).
-2026-06-18 03:15:55 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=59m44s375ms).
-2026-06-18 04:17:06 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=32m10s737ms).
-2026-06-18 05:18:03 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=40m56s639ms).
-2026-06-18 06:19:05 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=39m1s792ms).
-2026-06-18 07:20:14 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=44m8s906ms).
-2026-06-18 07:57:38 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=36m53s958ms).
-2026-06-18 08:21:05 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=23m26s614ms).
-2026-06-18 08:31:28 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=9m52s991ms).
+2026-06-23 10:45:21 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-23 10:45:21 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-06-23 10:45:21 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-06-23 10:45:21 [http-nio-8080-exec-1] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 2
+2026-06-23 10:47:50 [http-nio-8080-exec-4] DEBUG c.wintool.service.CodeSnippetService - 保存 3 个代码片段到文件
+2026-06-23 10:47:50 [http-nio-8080-exec-4] INFO  c.wintool.service.CodeSnippetService - 创建代码片段: 子网查询全部集群子网
+2026-06-23 10:47:50 [http-nio-8080-exec-5] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-23 10:59:06 [http-nio-8080-exec-7] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-23 10:59:55 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=56s462ms).
+2026-06-23 11:04:00 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4m5s307ms).
+2026-06-23 11:33:06 [http-nio-8080-exec-9] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-23 11:34:27 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=56s542ms).
+2026-06-23 12:03:37 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=29m9s768ms).
+2026-06-23 12:21:26 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m19s917ms).
+2026-06-23 13:33:03 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=22m35s911ms).
+2026-06-23 13:41:53 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=8m20s470ms).
+2026-06-23 15:00:14 [http-nio-8080-exec-1] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-23 15:01:21 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=56s639ms).
+2026-06-23 15:07:56 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=6m34s996ms).
+2026-06-23 15:53:32 [http-nio-8080-exec-3] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-23 15:54:23 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=56s984ms).
+2026-06-23 15:56:07 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m13s749ms).
+2026-06-23 17:49:57 [http-nio-8080-exec-5] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-23 17:51:04 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=56s768ms).
+2026-06-23 17:51:57 [http-nio-8080-exec-7] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-23 17:52:31 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=56s254ms).
+2026-06-23 17:56:53 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m52s591ms).
+2026-06-23 18:20:49 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=23m25s190ms).
+2026-06-23 18:37:25 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m6s949ms).
+2026-06-23 18:54:25 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m29s185ms).
+2026-06-23 19:19:57 [http-nio-8080-exec-9] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-23 19:20:52 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=57s119ms).
+2026-06-23 19:50:30 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=29m8s357ms).
+2026-06-23 20:08:20 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m19s914ms).
+2026-06-23 20:23:40 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m20s42ms).
+2026-06-23 20:30:58 [http-nio-8080-exec-1] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-23 20:32:00 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=49s560ms).
+2026-06-23 20:32:55 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=55s402ms).
+2026-06-23 21:01:26 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=28m491ms).
+2026-06-23 23:32:24 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m56s47ms).
+2026-06-24 00:32:14 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=59m50s718ms).
+2026-06-24 01:33:24 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h40s30ms).
+2026-06-24 01:45:23 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=11m28s985ms).
+2026-06-24 02:03:13 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m49s590ms).
+2026-06-24 05:03:41 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2h27s192ms).
+2026-06-24 06:01:05 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=57m24s57ms).
+2026-06-24 07:51:15 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h49m40s228ms).
+2026-06-24 08:02:22 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=10m36s618ms).
+2026-06-24 08:46:27 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=44m5s176ms).
+2026-06-24 08:47:27 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Retrograde clock change detected (housekeeper delta=29s831ms), soft-evicting connections from pool.
+2026-06-24 09:04:04 [http-nio-8080-exec-3] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-24 09:10:27 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=6m29s659ms).
+2026-06-24 09:49:40 [http-nio-8080-exec-5] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-24 09:58:30 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=8m33s129ms).
+2026-06-24 10:20:02 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=21m32s535ms).
+2026-06-24 10:36:32 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=59s773ms).
+2026-06-24 10:46:39 [http-nio-8080-exec-7] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-24 10:54:53 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=8m21s194ms).
+2026-06-24 11:30:47 [http-nio-8080-exec-9] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-24 12:01:20 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=30m26s416ms).
+2026-06-24 12:48:18 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=30m27s606ms).
+2026-06-24 13:26:57 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=13m38s649ms).
+2026-06-24 13:43:25 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m27s925ms).
+2026-06-24 14:44:05 [http-nio-8080-exec-1] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-24 14:55:13 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=11m17s534ms).
+2026-06-24 15:50:16 [http-nio-8080-exec-3] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-24 15:52:50 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m37s350ms).
+2026-06-24 16:20:50 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Retrograde clock change detected (housekeeper delta=29s840ms), soft-evicting connections from pool.
+2026-06-24 16:21:57 [http-nio-8080-exec-5] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-24 16:32:36 [http-nio-8080-exec-7] INFO  c.w.controller.CodeSnippetController - 获取所有代码片段，总数: 3
+2026-06-24 16:59:35 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5m14s237ms).
+2026-06-24 17:10:05 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Retrograde clock change detected (housekeeper delta=29s856ms), soft-evicting connections from pool.

@@ -289,7 +289,6 @@ def delete_snippet(snippet_id):
 def get_languages():
     """获取所有语言列表"""
     try:
-        snippets = load_snippets()
         languages = sorted(set(s['language'] for s in snippets))
         
         return jsonify({
@@ -550,6 +549,174 @@ def switch_k8s_context():
         return jsonify({
             'success': False,
             'message': f'切换上下文失败: {str(e)}'
+        }), 500
+
+
+# ==================== Kafka 消费工具 API ====================
+
+@app.route('/api/kafka/test', methods=['POST'])
+def kafka_test_connection():
+    """测试 Kafka 连接"""
+    try:
+        data = request.get_json()
+        brokers = data.get('brokers', '').strip()
+        topic = data.get('topic', '').strip()
+        username = data.get('username', '').strip()
+        password = data.get('password', '').strip()
+        
+        if not brokers or not topic:
+            return jsonify({
+                'success': False,
+                'message': 'Broker 和 Topic 不能为空'
+            }), 400
+        
+        # 导入 kafka-python
+        try:
+            from kafka import KafkaConsumer
+        except ImportError:
+            return jsonify({
+                'success': False,
+                'message': 'kafka-python 未安装，请先解压依赖'
+            }), 500
+        
+        # 解析 brokers
+        broker_list = [b.strip() for b in brokers.split(',') if b.strip()]
+        
+        # 极简配置 - 只保留必需参数
+        config = {
+            'bootstrap_servers': broker_list,
+        }
+        
+        # 如果有用户名密码，添加 SASL 认证
+        if username and password:
+            config.update({
+                'security_protocol': 'SASL_PLAINTEXT',
+                'sasl_mechanism': 'PLAIN',
+                'sasl_plain_username': username,
+                'sasl_plain_password': password,
+            })
+        
+        # 创建消费者测试连接
+        consumer = KafkaConsumer(**config)
+        
+        # 获取 topic 分区信息
+        partitions = consumer.partitions_for_topic(topic)
+        consumer.close()
+        
+        if partitions is not None:
+            return jsonify({
+                'success': True,
+                'message': f'连接成功！Topic 有 {len(partitions)} 个分区',
+                'partitions': sorted(list(partitions))
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': f'Topic "{topic}" 不存在'
+            }), 404
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'连接失败: {str(e)}'
+        }), 500
+
+
+@app.route('/api/kafka/consume', methods=['POST'])
+def kafka_consume_messages():
+    """消费 Kafka 消息"""
+    try:
+        data = request.get_json()
+        brokers = data.get('brokers', '').strip()
+        topic = data.get('topic', '').strip()
+        username = data.get('username', '').strip()
+        password = data.get('password', '').strip()
+        offset = data.get('offset', 'latest')
+        limit = int(data.get('limit', 10))
+        timeout_sec = int(data.get('timeout', 30))
+        
+        if not brokers or not topic:
+            return jsonify({
+                'success': False,
+                'message': 'Broker 和 Topic 不能为空'
+            }), 400
+        
+        # 导入 kafka-python
+        try:
+            from kafka import KafkaConsumer
+        except ImportError:
+            return jsonify({
+                'success': False,
+                'message': 'kafka-python 未安装，请先解压依赖'
+            }), 500
+        
+        # 解析 brokers
+        broker_list = [b.strip() for b in brokers.split(',') if b.strip()]
+        
+        # 极简配置 - 只保留必需参数
+        config = {
+            'bootstrap_servers': broker_list,
+            'auto_offset_reset': offset,
+            'enable_auto_commit': False,
+            'value_deserializer': lambda m: m.decode('utf-8', errors='ignore'),
+            'consumer_timeout_ms': timeout_sec * 1000,
+        }
+        
+        # 如果有用户名密码，添加 SASL 认证
+        if username and password:
+            config.update({
+                'security_protocol': 'SASL_PLAINTEXT',
+                'sasl_mechanism': 'PLAIN',
+                'sasl_plain_username': username,
+                'sasl_plain_password': password,
+            })
+        
+        # 创建消费者
+        consumer = KafkaConsumer(topic, **config)
+        
+        messages = []
+        import time
+        start_time = time.time()
+        
+        try:
+            for message in consumer:
+                # 解析消息
+                try:
+                    msg_data = json.loads(message.value)
+                except:
+                    msg_data = {'_raw': message.value}
+                
+                # 添加元数据
+                msg_data['_partition'] = message.partition
+                msg_data['_offset'] = message.offset
+                msg_data['_timestamp'] = message.timestamp
+                
+                messages.append(msg_data)
+                
+                # 达到限制
+                if len(messages) >= limit:
+                    break
+                
+                # 超时
+                if time.time() - start_time > timeout_sec:
+                    break
+                    
+        except StopIteration:
+            pass  # 超时正常退出
+        
+        consumer.close()
+        
+        return jsonify({
+            'success': True,
+            'message': f'消费成功，共 {len(messages)} 条消息',
+            'count': len(messages),
+            'messages': messages
+        })
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'消费失败: {str(e)}'
         }), 500
 
 

@@ -27,6 +27,11 @@ const routes = [
     path: '/tools/k8s-cluster',
     name: 'K8sCluster',
     component: () => import('../views/tools/K8sClusterTool.vue')
+  },
+  {
+    path: '/tools/kafka-consumer',
+    name: 'KafkaConsumer',
+    component: () => import('../views/tools/KafkaConsumerTool.vue')
   }
 ]
 

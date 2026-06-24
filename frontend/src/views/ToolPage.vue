@@ -82,7 +82,7 @@ const goBack = () => {
 
 const hasImplementation = (toolId) => {
   // 已实现的工具列表
-  const implementedTools = ['export-dir', 'code-snippets', 'k8s-cluster']
+  const implementedTools = ['export-dir', 'code-snippets', 'k8s-cluster', 'kafka-consumer']
   return implementedTools.includes(toolId)
 }
 
@@ -91,7 +91,8 @@ const goToTool = () => {
   const toolRoutes = {
     'export-dir': '/tools/directory-export',
     'code-snippets': '/tools/code-snippets',
-    'k8s-cluster': '/tools/k8s-cluster'
+    'k8s-cluster': '/tools/k8s-cluster',
+    'kafka-consumer': '/tools/kafka-consumer'
   }
   
   const routePath = toolRoutes[route.params.id]
@@ -184,6 +185,17 @@ const getPlannedFeatures = (toolId) => {
       '✅ 一键复制输出',
       '✅ 支持自定义命令',
       '✅ 完全离线部署'
+    ],
+    'kafka-consumer': [
+      '✅ 连接内网 Kafka 集群',
+      '✅ 支持 SASL 认证（用户名密码）',
+      '✅ 测试连接功能',
+      '✅ 消费消息数据',
+      '✅ 显示分区和偏移量信息',
+      '✅ JSON 格式化显示',
+      '✅ 一键复制消息',
+      '✅ 完全离线部署',
+      '✅ 极简连接，不做多余检查'
     ]
   }
   
