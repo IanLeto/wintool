@@ -4,6 +4,13 @@ export const useToolStore = defineStore('tool', {
   state: () => ({
     tools: [
       {
+        id: 'prototype-viewer',
+        name: '原型预览',
+        description: '预览 HTML 原型文件',
+        icon: '🎨',
+        category: '设计工具'
+      },
+      {
         id: 'batch-extract',
         name: '批量解压工具',
         description: '批量解压 7z 和 zip 文件',
@@ -92,24 +99,26 @@ export const useToolStore = defineStore('tool', {
         name: '体重记录',
         description: '记录和追踪体重变化',
         icon: '⚖️',
-        category: '生活'
+        category: '生活',
+        hidden: true  // 隐藏但保留路由
       },
       {
         id: 'provincial-exam',
         name: '省考信息查询',
         description: '查询公务员考试信息',
         icon: '📚',
-        category: '信息查询'
+        category: '信息查询',
+        hidden: true  // 隐藏但保留路由
       }
     ],
     currentTool: null
   }),
 
   getters: {
-    // 按分类分组工具
+    // 按分类分组工具（过滤隐藏的工具）
     toolsByCategory: (state) => {
       const grouped = {}
-      state.tools.forEach(tool => {
+      state.tools.filter(tool => !tool.hidden).forEach(tool => {
         if (!grouped[tool.category]) {
           grouped[tool.category] = []
         }
@@ -118,9 +127,9 @@ export const useToolStore = defineStore('tool', {
       return grouped
     },
 
-    // 获取所有分类
+    // 获取所有分类（过滤隐藏的工具）
     categories: (state) => {
-      return [...new Set(state.tools.map(tool => tool.category))]
+      return [...new Set(state.tools.filter(tool => !tool.hidden).map(tool => tool.category))]
     },
 
     // 根据 ID 获取工具

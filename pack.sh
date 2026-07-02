@@ -157,15 +157,25 @@ chmod +x "$TEMP_DIR/start.sh"
 
 # 复制数据目录（如果存在）
 if [[ -d "$SCRIPT_DIR/code_snippets" ]]; then
-    echo_info "  [6/7] 复制数据文件..."
+    echo_info "  [6/8] 复制数据文件..."
     cp -r "$SCRIPT_DIR/code_snippets" "$TEMP_DIR/"
 else
-    echo_info "  [6/7] 创建数据目录..."
+    echo_info "  [6/8] 创建数据目录..."
     mkdir -p "$TEMP_DIR/code_snippets"
 fi
 
+# 复制原型文件目录
+echo_info "  [7/8] 复制原型文件..."
+if [[ -d "$SCRIPT_DIR/prototypes" ]]; then
+    cp -r "$SCRIPT_DIR/prototypes" "$TEMP_DIR/"
+    echo_info "      已复制 prototypes 目录（$(ls -1 "$SCRIPT_DIR/prototypes"/*.html 2>/dev/null | wc -l | tr -d ' ') 个 HTML 文件）"
+else
+    mkdir -p "$TEMP_DIR/prototypes"
+    echo_info "      已创建 prototypes 目录（空）"
+fi
+
 # 复制 kubeconfig 示例文件
-echo_info "  [7/7] 复制 K8s 配置文件..."
+echo_info "  [8/8] 复制 K8s 配置文件..."
 if [[ -f "$SCRIPT_DIR/kubeconfig" ]]; then
     cp "$SCRIPT_DIR/kubeconfig" "$TEMP_DIR/"
     echo_info "      已复制实际 kubeconfig 文件"

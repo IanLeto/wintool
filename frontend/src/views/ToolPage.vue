@@ -82,7 +82,7 @@ const goBack = () => {
 
 const hasImplementation = (toolId) => {
   // 已实现的工具列表
-  const implementedTools = ['export-dir', 'code-snippets', 'k8s-cluster', 'kafka-consumer']
+  const implementedTools = ['export-dir', 'code-snippets', 'k8s-cluster', 'kafka-consumer', 'prototype-viewer']
   return implementedTools.includes(toolId)
 }
 
@@ -92,7 +92,8 @@ const goToTool = () => {
     'export-dir': '/tools/directory-export',
     'code-snippets': '/tools/code-snippets',
     'k8s-cluster': '/tools/k8s-cluster',
-    'kafka-consumer': '/tools/kafka-consumer'
+    'kafka-consumer': '/tools/kafka-consumer',
+    'prototype-viewer': '/tools/prototype-viewer'
   }
   
   const routePath = toolRoutes[route.params.id]
@@ -196,6 +197,15 @@ const getPlannedFeatures = (toolId) => {
       '✅ 一键复制消息',
       '✅ 完全离线部署',
       '✅ 极简连接，不做多余检查'
+    ],
+    'prototype-viewer': [
+      '✅ 扫描 prototypes/ 目录下的 HTML 文件',
+      '✅ 列表展示所有原型文件',
+      '✅ 点击预览原型页面',
+      '✅ 支持完整的 HTML/CSS/JS',
+      '✅ 文件大小和修改时间显示',
+      '✅ 响应式设计',
+      '✅ 快速访问原型设计'
     ]
   }
   

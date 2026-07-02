@@ -552,6 +552,91 @@ def switch_k8s_context():
         }), 500
 
 
+# ==================== 原型预览 API ====================
+
+# 原型文件目录
+PROTOTYPES_DIR = Path(__file__).parent.parent / "prototypes"
+
+@app.route('/api/prototypes/list', methods=['GET'])
+def list_prototypes():
+    """获取所有原型文件列表"""
+    try:
+        # 确保目录存在
+        if not PROTOTYPES_DIR.exists():
+            PROTOTYPES_DIR.mkdir(parents=True, exist_ok=True)
+            return jsonify({
+                'success': True,
+                'prototypes': [],
+                'message': '原型目录已创建，请添加 HTML 文件'
+            })
+        
+        # 扫描 HTML 文件
+        prototypes = []
+        for file_path in PROTOTYPES_DIR.rglob('*.html'):
+            if file_path.is_file():
+                # 获取相对路径
+                rel_path = file_path.relative_to(PROTOTYPES_DIR)
+                
+                # 获取文件信息
+                stat = file_path.stat()
+                
+                prototypes.append({
+                    'name': file_path.name,
+                    'path': str(rel_path),
+                    'size': stat.st_size,
+                    'modified': int(stat.st_mtime)
+                })
+        
+        # 按修改时间倒序排序
+        prototypes.sort(key=lambda x: x['modified'], reverse=True)
+        
+        return jsonify({
+            'success': True,
+            'prototypes': prototypes,
+            'total': len(prototypes)
+        })
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'获取原型列表失败: {str(e)}'
+        }), 500
+
+
+@app.route('/api/prototypes/view/<path:file_path>', methods=['GET'])
+def view_prototype(file_path):
+    """预览原型文件"""
+    try:
+        # 安全检查：防止路径遍历攻击
+        safe_path = Path(file_path).resolve()
+        prototypes_abs = PROTOTYPES_DIR.resolve()
+        
+        # 确保文件在 prototypes 目录内
+        full_path = (prototypes_abs / file_path).resolve()
+        
+        if not str(full_path).startswith(str(prototypes_abs)):
+            return jsonify({
+                'success': False,
+                'message': '非法的文件路径'
+            }), 403
+        
+        # 检查文件是否存在
+        if not full_path.exists() or not full_path.is_file():
+            return jsonify({
+                'success': False,
+                'message': '文件不存在'
+            }), 404
+        
+        # 返回 HTML 文件
+        return send_from_directory(str(PROTOTYPES_DIR), file_path)
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'预览失败: {str(e)}'
+        }), 500
+
+
 # ==================== Kafka 消费工具 API ====================
 
 @app.route('/api/kafka/test', methods=['POST'])
@@ -718,6 +803,14 @@ def kafka_consume_messages():
             'success': False,
             'message': f'消费失败: {str(e)}'
         }), 500
+
+
+# 原型文件静态服务
+@app.route('/prototypes/<path:filename>')
+def serve_prototype(filename):
+    """直接提供原型 HTML 文件"""
+    prototypes_dir = Path(__file__).parent.parent / "prototypes"
+    return send_from_directory(str(prototypes_dir), filename)
 
 
 # 前端路由支持（SPA）

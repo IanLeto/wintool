@@ -9,4 +9,5 @@ com/wintool/controller/CodeSnippetController.class
 com/wintool/controller/DirectoryController$CreateStructureRequest.class
 com/wintool/controller/HealthController.class
 com/wintool/controller/DirectoryController$DirectoryNode.class
+com/wintool/controller/PrototypeController.class
 com/wintool/WintoolApplication.class

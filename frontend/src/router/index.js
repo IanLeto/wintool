@@ -32,6 +32,11 @@ const routes = [
     path: '/tools/kafka-consumer',
     name: 'KafkaConsumer',
     component: () => import('../views/tools/KafkaConsumerTool.vue')
+  },
+  {
+    path: '/tools/prototype-viewer',
+    name: 'PrototypeViewer',
+    component: () => import('../views/tools/PrototypeViewerTool.vue')
   }
 ]
 

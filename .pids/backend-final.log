@@ -1,0 +1,218 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< com.wintool:wintool-backend >---------------------
+[INFO] Building wintool-backend 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:2.7.18:run (default-cli) > test-compile @ wintool-backend >>>
+[WARNING] The artifact mysql:mysql-connector-java:jar:8.0.33 has been relocated to com.mysql:mysql-connector-j:jar:8.0.33: MySQL Connector/J artifacts moved to reverse-DNS compliant Maven 2+ coordinates.
+[INFO] 
+[INFO] --- resources:3.2.0:resources (default-resources) @ wintool-backend ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 1 resource
+[INFO] Copying 0 resource
+[INFO] 
+[INFO] --- compiler:3.10.1:compile (default-compile) @ wintool-backend ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 9 source files to /Users/ian/workdir/wintool/backend/wintool-backend/target/classes
+[INFO] 
+[INFO] --- resources:3.2.0:testResources (default-testResources) @ wintool-backend ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] skip non existing resourceDirectory /Users/ian/workdir/wintool/backend/wintool-backend/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.10.1:testCompile (default-testCompile) @ wintool-backend ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /Users/ian/workdir/wintool/backend/wintool-backend/target/test-classes
+[INFO] 
+[INFO] <<< spring-boot:2.7.18:run (default-cli) < test-compile @ wintool-backend <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:2.7.18:run (default-cli) @ wintool-backend ---
+[INFO] Attaching agents: []
+15:56:35.378 [Thread-0] DEBUG org.springframework.boot.devtools.restart.classloader.RestartClassLoader - Created RestartClassLoader org.springframework.boot.devtools.restart.classloader.RestartClassLoader@885f9fa
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::               (v2.7.18)
+
+2026-07-02 15:56:35 [restartedMain] INFO  com.wintool.WintoolApplication - Starting WintoolApplication using Java 17.0.18 on iandeMacBook-Pro.local with PID 53539 (/Users/ian/workdir/wintool/backend/wintool-backend/target/classes started by ian in /Users/ian/workdir/wintool/backend/wintool-backend)
+2026-07-02 15:56:35 [restartedMain] DEBUG com.wintool.WintoolApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
+2026-07-02 15:56:35 [restartedMain] INFO  com.wintool.WintoolApplication - No active profile set, falling back to 1 default profile: "default"
+2026-07-02 15:56:35 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-07-02 15:56:35 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-07-02 15:56:36 [restartedMain] WARN  o.m.s.mapper.ClassPathMapperScanner - No MyBatis mapper was found in '[com.wintool]' package. Please check your configuration.
+2026-07-02 15:56:36 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2026-07-02 15:56:36 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-02 15:56:36 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2026-07-02 15:56:36 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-02 15:56:36 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1092 ms
+2026-07-02 15:56:36 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-02 15:56:36 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-02 15:56:36 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:wintool'
+2026-07-02 15:56:37 [restartedMain] INFO  c.wintool.service.CodeSnippetService - 从文件加载了 5 个代码片段
+2026-07-02 15:56:37 [restartedMain] INFO  c.wintool.service.CodeSnippetService - 代码片段服务初始化完成，加载了 5 个片段
+Logging initialized using 'class org.apache.ibatis.logging.stdout.StdOutImpl' adapter.
+Property 'mapperLocations' was not specified.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.3.1 
+2026-07-02 15:56:37 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-07-02 15:56:37 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2026-07-02 15:56:37 [restartedMain] INFO  com.wintool.WintoolApplication - Started WintoolApplication in 2.048 seconds (JVM running for 2.406)
+
+========================================
+  Wintool Backend 启动成功！
+  访问地址: http://localhost:8080
+  API 文档: http://localhost:8080/swagger-ui.html
+========================================
+
+2026-07-02 15:56:48 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-02 15:56:48 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-02 15:56:48 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-07-02 15:56:48 [http-nio-8080-exec-1] INFO  c.w.controller.PrototypeController - 请求原型文件: example.html
+2026-07-02 15:56:48 [http-nio-8080-exec-1] WARN  c.w.controller.PrototypeController - 文件不存在或不可读: /Users/ian/workdir/wintool/backend/wintool-backend/prototypes/example.html
+2026-07-02 15:56:56 [http-nio-8080-exec-3] INFO  c.w.controller.PrototypeController - 请求原型文件: example.html
+2026-07-02 15:56:56 [http-nio-8080-exec-3] WARN  c.w.controller.PrototypeController - 文件不存在或不可读: /Users/ian/workdir/wintool/backend/wintool-backend/prototypes/example.html
+2026-07-02 15:57:32 [http-nio-8080-exec-5] INFO  c.w.controller.PrototypeController - 请求原型文件: example.html
+2026-07-02 15:57:32 [http-nio-8080-exec-5] WARN  c.w.controller.PrototypeController - 文件不存在或不可读: /Users/ian/workdir/wintool/backend/wintool-backend/prototypes/example.html
+2026-07-02 15:57:44 [http-nio-8080-exec-7] INFO  c.w.controller.PrototypeController - 请求原型文件: example.html
+2026-07-02 15:57:44 [http-nio-8080-exec-7] WARN  c.w.controller.PrototypeController - 文件不存在或不可读: /Users/ian/workdir/wintool/backend/wintool-backend/prototypes/example.html
+2026-07-02 15:57:49 [http-nio-8080-exec-9] INFO  c.w.controller.PrototypeController - 请求原型文件: example.html
+2026-07-02 15:57:49 [http-nio-8080-exec-9] WARN  c.w.controller.PrototypeController - 文件不存在或不可读: /Users/ian/workdir/wintool/backend/wintool-backend/prototypes/example.html
+2026-07-02 15:58:19 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 13 class path changes (0 additions, 13 deletions, 0 modifications)
+2026-07-02 15:58:20 [Thread-6] WARN  o.apache.tomcat.util.net.NioEndpoint - Failed to unlock acceptor for [http-nio-8080] because the local address was not available
+2026-07-02 15:58:20 [Thread-6] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2026-07-02 15:58:20 [Thread-6] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Destroying Spring FrameworkServlet 'dispatcherServlet'
+2026-07-02 15:58:20 [http-nio-8080-Acceptor] ERROR org.apache.tomcat.util.net.Acceptor - Socket accept failed
+java.nio.channels.AsynchronousCloseException: null
+	at java.base/java.nio.channels.spi.AbstractInterruptibleChannel.end(AbstractInterruptibleChannel.java:202)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.end(ServerSocketChannelImpl.java:376)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.accept(ServerSocketChannelImpl.java:399)
+	at org.apache.tomcat.util.net.NioEndpoint.serverSocketAccept(NioEndpoint.java:548)
+	at org.apache.tomcat.util.net.NioEndpoint.serverSocketAccept(NioEndpoint.java:79)
+	at org.apache.tomcat.util.net.Acceptor.run(Acceptor.java:129)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-07-02 15:58:20 [Thread-6] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
+2026-07-02 15:58:20 [Thread-6] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-07-02 15:58:20 [Thread-6] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::               (v2.7.18)
+
+2026-07-02 15:58:20 [restartedMain] INFO  com.wintool.WintoolApplication - Starting WintoolApplication using Java 17.0.18 on iandeMacBook-Pro.local with PID 53539 (/Users/ian/workdir/wintool/backend/wintool-backend/target/classes started by ian in /Users/ian/workdir/wintool/backend/wintool-backend)
+2026-07-02 15:58:20 [restartedMain] DEBUG com.wintool.WintoolApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
+2026-07-02 15:58:20 [restartedMain] INFO  com.wintool.WintoolApplication - No active profile set, falling back to 1 default profile: "default"
+2026-07-02 15:58:20 [restartedMain] WARN  o.m.s.mapper.ClassPathMapperScanner - No MyBatis mapper was found in '[com.wintool]' package. Please check your configuration.
+2026-07-02 15:58:20 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2026-07-02 15:58:20 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-02 15:58:20 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2026-07-02 15:58:20 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-02 15:58:20 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 208 ms
+2026-07-02 15:58:20 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+2026-07-02 15:58:20 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+2026-07-02 15:58:20 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:wintool'
+2026-07-02 15:58:20 [restartedMain] INFO  c.wintool.service.CodeSnippetService - 从文件加载了 5 个代码片段
+2026-07-02 15:58:20 [restartedMain] INFO  c.wintool.service.CodeSnippetService - 代码片段服务初始化完成，加载了 5 个片段
+Logging initialized using 'class org.apache.ibatis.logging.stdout.StdOutImpl' adapter.
+Property 'mapperLocations' was not specified.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.3.1 
+2026-07-02 15:58:21 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-07-02 15:58:21 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2026-07-02 15:58:21 [restartedMain] INFO  com.wintool.WintoolApplication - Started WintoolApplication in 0.365 seconds (JVM running for 106.08)
+2026-07-02 15:58:21 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+
+========================================
+  Wintool Backend 启动成功！
+  访问地址: http://localhost:8080
+  API 文档: http://localhost:8080/swagger-ui.html
+========================================
+
+2026-07-02 15:58:22 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 13 class path changes (13 additions, 0 deletions, 0 modifications)
+2026-07-02 15:58:23 [Thread-8] WARN  o.apache.tomcat.util.net.NioEndpoint - Failed to unlock acceptor for [http-nio-8080] because the local address was not available
+2026-07-02 15:58:23 [Thread-8] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2026-07-02 15:58:23 [http-nio-8080-Acceptor] ERROR org.apache.tomcat.util.net.Acceptor - Socket accept failed
+java.nio.channels.AsynchronousCloseException: null
+	at java.base/java.nio.channels.spi.AbstractInterruptibleChannel.end(AbstractInterruptibleChannel.java:202) ~[na:na]
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.end(ServerSocketChannelImpl.java:376) ~[na:na]
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.accept(ServerSocketChannelImpl.java:399) ~[na:na]
+	at org.apache.tomcat.util.net.NioEndpoint.serverSocketAccept(NioEndpoint.java:548) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.tomcat.util.net.NioEndpoint.serverSocketAccept(NioEndpoint.java:79) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at org.apache.tomcat.util.net.Acceptor.run(Acceptor.java:129) ~[tomcat-embed-core-9.0.83.jar:9.0.83]
+	at java.base/java.lang.Thread.run(Thread.java:840) ~[na:na]
+2026-07-02 15:58:23 [Thread-8] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
+2026-07-02 15:58:23 [Thread-8] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
+2026-07-02 15:58:23 [Thread-8] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::               (v2.7.18)
+
+2026-07-02 15:58:23 [restartedMain] INFO  com.wintool.WintoolApplication - Starting WintoolApplication using Java 17.0.18 on iandeMacBook-Pro.local with PID 53539 (/Users/ian/workdir/wintool/backend/wintool-backend/target/classes started by ian in /Users/ian/workdir/wintool/backend/wintool-backend)
+2026-07-02 15:58:23 [restartedMain] DEBUG com.wintool.WintoolApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
+2026-07-02 15:58:23 [restartedMain] INFO  com.wintool.WintoolApplication - No active profile set, falling back to 1 default profile: "default"
+2026-07-02 15:58:23 [restartedMain] WARN  o.m.s.mapper.ClassPathMapperScanner - No MyBatis mapper was found in '[com.wintool]' package. Please check your configuration.
+2026-07-02 15:58:23 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2026-07-02 15:58:23 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-02 15:58:23 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2026-07-02 15:58:23 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-02 15:58:23 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 154 ms
+2026-07-02 15:58:23 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
+2026-07-02 15:58:23 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
+2026-07-02 15:58:23 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:wintool'
+2026-07-02 15:58:23 [restartedMain] INFO  c.wintool.service.CodeSnippetService - 从文件加载了 5 个代码片段
+2026-07-02 15:58:23 [restartedMain] INFO  c.wintool.service.CodeSnippetService - 代码片段服务初始化完成，加载了 5 个片段
+Logging initialized using 'class org.apache.ibatis.logging.stdout.StdOutImpl' adapter.
+Property 'mapperLocations' was not specified.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.3.1 
+2026-07-02 15:58:24 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-07-02 15:58:24 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2026-07-02 15:58:24 [restartedMain] INFO  com.wintool.WintoolApplication - Started WintoolApplication in 0.32 seconds (JVM running for 109.045)
+2026-07-02 15:58:24 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+
+========================================
+  Wintool Backend 启动成功！
+  访问地址: http://localhost:8080
+  API 文档: http://localhost:8080/swagger-ui.html
+========================================
+
+2026-07-02 15:58:30 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-02 15:58:30 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-02 15:58:30 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-07-02 15:58:30 [http-nio-8080-exec-1] INFO  c.w.controller.PrototypeController - 请求原型文件: example.html
+2026-07-02 15:58:30 [http-nio-8080-exec-1] INFO  c.w.controller.PrototypeController - 找到文件: /Users/ian/workdir/wintool/backend/wintool-backend/../../prototypes/example.html
+2026-07-02 15:58:48 [http-nio-8080-exec-2] INFO  c.w.controller.PrototypeController - 请求原型文件: example.html
+2026-07-02 15:58:48 [http-nio-8080-exec-2] INFO  c.w.controller.PrototypeController - 找到文件: /Users/ian/workdir/wintool/backend/wintool-backend/../../prototypes/example.html
+2026-07-02 16:21:19 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=15m25s356ms).
+2026-07-02 16:21:38 [http-nio-8080-exec-3] INFO  c.w.controller.PrototypeController - 请求原型文件: example.html
+2026-07-02 16:21:38 [http-nio-8080-exec-3] INFO  c.w.controller.PrototypeController - 找到文件: /Users/ian/workdir/wintool/backend/wintool-backend/../../prototypes/example.html
+2026-07-02 16:37:17 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=2m57s657ms).
+2026-07-02 16:38:49 [http-nio-8080-exec-4] INFO  c.w.controller.PrototypeController - 请求原型文件: example.html
+2026-07-02 16:38:49 [http-nio-8080-exec-4] INFO  c.w.controller.PrototypeController - 找到文件: /Users/ian/workdir/wintool/backend/wintool-backend/../../prototypes/example.html
+2026-07-02 16:38:50 [http-nio-8080-exec-5] INFO  c.w.controller.PrototypeController - 请求原型文件: example.html
+2026-07-02 16:38:50 [http-nio-8080-exec-5] INFO  c.w.controller.PrototypeController - 找到文件: /Users/ian/workdir/wintool/backend/wintool-backend/../../prototypes/example.html
+2026-07-02 16:59:46 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=6m59s330ms).
+2026-07-02 17:13:19 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=3m32s719ms).
+2026-07-02 17:44:20 [HikariPool-3 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Thread starvation or clock leap detected (housekeeper delta=13m30s562ms).
