@@ -5,7 +5,7 @@
 ### 外网环境（开发/打包）
 ```
 wintool/
-├── prototypes/              # 原型文件目录
+├── prototypes/             # 原型文件目录
 │   ├── example.html        # 示例原型
 │   ├── design1.html        # 你的原型文件
 │   └── design2.html        # 更多原型...
