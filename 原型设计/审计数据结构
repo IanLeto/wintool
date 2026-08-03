@@ -1,0 +1,45 @@
+{
+  "kind": "Event",
+  "apiVersion": "audit.k8s.io/v1",
+  "level": "Request",
+  "auditID": "...",
+  "stage": "ResponseComplete",
+  "requestURI": "/api/v1/namespaces/euas-sp/persistentvolumeclaims",
+  "verb": "list",
+  "user": {
+    "username": "system:serviceaccount:cebpaas-system:ops-exporter-sa",
+    "uid": "...",
+    "groups": [
+      "system:serviceaccounts",
+      "system:serviceaccounts:cebpaas-system",
+      "system:authenticated"
+    ],
+    "extra": {
+      "authentication.kubernetes.io/pod-name": [
+        "ops-exporter-6bbb87bd54-8s7tt"
+      ],
+      "authentication.kubernetes.io/pod-uid": [
+        "38ab1265-325a-4ba8-89bd-38e11facb521"
+      ]
+    }
+  },
+  "sourceIPs": [
+    "15.255.150.203"
+  ],
+  "userAgent": "ops-exporter/v0.0.0 (linux/amd64) kubernetes/$Format",
+  "objectRef": {
+    "resource": "persistentvolumeclaims",
+    "namespace": "euas-sp",
+    "apiVersion": "v1"
+  },
+  "responseStatus": {
+    "metadata": {},
+    "code": 200
+  },
+  "requestReceivedTimestamp": "2026-06-17T07:44:57.912514Z",
+  "stageTimestamp": "2026-06-17T07:44:57.915711Z",
+  "annotations": {
+    "authorization.k8s.io/decision": "allow",
+    "authorization.k8s.io/reason": "RBAC: allowed by ..."
+  }
+}

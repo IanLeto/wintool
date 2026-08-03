@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>K8s 审计页面</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "PingFang SC",
+        "Microsoft YaHei",
+        Arial,
+        sans-serif;
+      background: #f4f7fb;
+      color: #2f3a4a;
+      font-size: 14px;
+    }
+
+    .page {
+      min-height: 100vh;
+      background: #f5f8fc;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .watermark {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.08;
+      background-image:
+        repeating-linear-gradient(
+          -15deg,
+          transparent 0,
+          transparent 80px,
+          rgba(20, 50, 80, 0.4) 82px,
+          transparent 84px
+        );
+    }
+
+    .watermark::before {
+      content: "刘佳名 lk01106|CEBBANK    14.11.12.162    科技部 刘佳名    2026-07-11";
+      position: absolute;
+      left: -120px;
+      top: 40px;
+      width: 140%;
+      height: 140%;
+      color: rgba(50, 70, 90, 0.55);
+      font-size: 18px;
+      line-height: 96px;
+      transform: rotate(-15deg);
+      word-spacing: 18px;
+      white-space: pre-wrap;
+    }
+
+    .layout {
+      position: relative;
+      z-index: 2;
+    }
+
+    .topbar {
+      height: 56px;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      border-bottom: 1px solid #e9edf4;
+      box-shadow: 0 1px 2px rgba(20, 30, 50, 0.03);
+    }
+
+    .grid-icon {
+      width: 14px;
+      height: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-right: 36px;
+    }
+
+    .grid-icon span {
+      background: #1d2b53;
+      border-radius: 1px;
+    }
+
+    .cluster-select {
+      display: flex;
+      align-items: center;
+      color: #40546c;
+      font-size: 13px;
+    }
+
+    .cluster-dot {
+      width: 14px;
+      height: 14px;
+      background: linear-gradient(135deg, #2d8cf0, #5cadff);
+      margin-right: 8px;
+      border-radius: 2px;
+    }
+
+    .cluster-name {
+      font-weight: 600;
+    }
+
+    .arrow {
+      margin-left: 6px;
+      color: #8a99aa;
+      font-size: 12px;
+    }
+
+    .sub-header {
+      height: 48px;
+      background: #eef2f7;
+      display: flex;
+      align-items: center;
+      padding: 0 36px;
+      color: #334155;
+      font-weight: 600;
+      border-bottom: 1px solid #e4e9f1;
+    }
+
+    .container {
+      padding: 24px 36px 42px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid #e7ecf3;
+      box-shadow: 0 1px 2px rgba(20, 30, 60, 0.03);
+      min-height: 620px;
+    }
+
+    .search-panel {
+      background: #fff;
+      padding: 24px 28px 18px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(360px, 1fr));
+      gap: 16px 36px;
+      max-width: 1080px;
+    }
+
+    .form-row {
+      display: flex;
+      align-items: center;
+    }
+
+    .label {
+      width: 78px;
+      color: #4c5b6f;
+      font-weight: 600;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .input,
+    .select {
+      height: 34px;
+      border: 1px solid #dfe5ee;
+      border-radius: 3px;
+      padding: 0 12px;
+      color: #66758a;
+      outline: none;
+      background: #fff;
+      font-size: 13px;
+    }
+
+    .input {
+      width: 430px;
+    }
+
+    .select {
+      width: 430px;
+      appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, #a4afbd 50%),
+        linear-gradient(135deg, #a4afbd 50%, transparent 50%);
+      background-position:
+        calc(100% - 16px) 14px,
+        calc(100% - 11px) 14px;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+    }
+
+    .filter-row {
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .filter-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .small-select {
+      width: 260px;
+      height: 34px;
+    }
+
+    .actions-area {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .quiet-switch-area {
+      display: inline-flex;
+      align-items: center;
+      color: #7b8ba0;
+      font-size: 12px;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .quiet-switch-area input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .quiet-switch {
+      width: 32px;
+      height: 18px;
+      border-radius: 999px;
+      background: #d8dee8;
+      margin-right: 7px;
+      position: relative;
+      transition: background 0.2s ease;
+      box-shadow: inset 0 0 0 1px rgba(90, 105, 125, 0.08);
+    }
+
+    .quiet-switch::after {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      left: 2px;
+      top: 2px;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(40, 50, 70, 0.22);
+      transition: transform 0.2s ease;
+    }
+
+    .quiet-switch-area input:checked + .quiet-switch {
+      background: #9aa7b5;
+    }
+
+    .quiet-switch-area input:checked + .quiet-switch::after {
+      transform: translateX(14px);
+    }
+
+    .quiet-switch-text {
+      color: #7f8c9d;
+    }
+
+    .quiet-switch-hint {
+      margin-left: 4px;
+      color: #a0aaba;
+    }
+
+    .btn-group {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 3px;
+      height: 34px;
+      padding: 0 22px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      margin-left: 8px;
+    }
+
+    .btn-primary {
+      background: #1593ff;
+      color: #fff;
+      box-shadow: 0 2px 4px rgba(21, 147, 255, 0.25);
+    }
+
+    .btn-default {
+      background: #fff;
+      color: #4c5b6f;
+      border: 1px solid #dfe5ee;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      background: #fff;
+    }
+
+    thead {
+      background: #f5f8fc;
+    }
+
+    th {
+      text-align: left;
+      height: 44px;
+      color: #2f3a4a;
+      font-size: 13px;
+      font-weight: 700;
+      border-bottom: 1px solid #e6ebf2;
+      padding: 0 20px;
+    }
+
+    td {
+      height: 56px;
+      padding: 0 20px;
+      border-bottom: 1px solid #edf1f6;
+      color: #4f6075;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    .col-project {
+      width: 16%;
+    }
+
+    .col-namespace {
+      width: 16%;
+    }
+
+    .col-action {
+      width: 12%;
+    }
+
+    .col-resource {
+      width: 24%;
+    }
+
+    .col-user {
+      width: 16%;
+    }
+
+    .col-status {
+      width: 12%;
+    }
+
+    .col-time {
+      width: 20%;
+    }
+
+    .col-detail {
+      width: 9%;
+    }
+
+    .resource-main {
+      color: #40546c;
+      margin-bottom: 3px;
+    }
+
+    .resource-sub {
+      color: #7b8ba0;
+      font-size: 12px;
+    }
+
+    .success {
+      display: inline-flex;
+      align-items: center;
+      color: #25b884;
+      font-weight: 600;
+    }
+
+    .success::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      background: #25c488;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    .raw-link {
+      color: #1593ff;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .help {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #96a3b3;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .table-section {
+      overflow-x: auto;
+    }
+
+    .low-value-row {
+      display: none;
+    }
+
+    body.show-low-value .low-value-row {
+      display: table-row;
+    }
+
+    .pagination {
+      height: 58px;
+      padding: 0 28px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 14px;
+      color: #66758a;
+      font-size: 13px;
+      background: #fff;
+    }
+
+    .page-num {
+      color: #1593ff;
+      font-weight: 600;
+    }
+
+    .page-arrow {
+      color: #9aa7b5;
+      font-size: 18px;
+    }
+
+    .page-size {
+      height: 30px;
+      width: 86px;
+      border: 1px solid #dfe5ee;
+      border-radius: 3px;
+      color: #66758a;
+      padding-left: 8px;
+      background: #fff;
+    }
+
+    .jump-input {
+      width: 42px;
+      height: 30px;
+      border: 1px solid #dfe5ee;
+      border-radius: 3px;
+      text-align: center;
+      color: #66758a;
+    }
+
+    @media (max-width: 1100px) {
+      .filter-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .actions-area {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        padding: 16px;
+      }
+
+      .topbar {
+        padding: 0 16px;
+      }
+
+      .sub-header {
+        padding: 0 16px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .label {
+        width: auto;
+      }
+
+      .input,
+      .select {
+        width: 100%;
+      }
+
+      .filter-left {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+      }
+
+      .filter-left .form-row {
+        width: 100%;
+      }
+
+      .small-select {
+        width: 100%;
+      }
+
+      .actions-area {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+
+      .btn-group {
+        justify-content: flex-end;
+      }
+
+      table {
+        min-width: 980px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="watermark"></div>
+
+    <div class="layout">
+      <header class="topbar">
+        <div class="grid-icon" aria-hidden="true">
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+        </div>
+
+        <div class="cluster-select">
+          <div class="cluster-dot"></div>
+          <span>集群：</span>
+          <span class="cluster-name">cpaas-qkehg-ecadevbj1b-sp-cc02</span>
+          <span class="arrow">▼</span>
+        </div>
+      </header>
+
+      <div class="sub-header">审计</div>
+
+      <main class="container">
+        <section class="card">
+          <div class="search-panel">
+            <div class="form-grid">
+              <div class="form-row">
+                <label class="label">操作类型</label>
+                <select class="select">
+                  <option>全部</option>
+                  <option>用户操作</option>
+                  <option>系统操作</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label class="label">项目</label>
+                <select class="select">
+                  <option>All</option>
+                  <option>Core Banking</option>
+                  <option>Payment Platform</option>
+                  <option>Container Platform</option>
+                  <option>Operations Platform</option>
+                  <option>Test Environment</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label class="label">操作人</label>
+                <select class="select">
+                  <option>全部</option>
+                  <option>k01106</option>
+                  <option>774170</option>
+                  <option>775596</option>
+                  <option>admin</option>
+                  <option>system:kube-controller-manager</option>
+                  <option>system:kube-scheduler</option>
+                  <option>system:serviceaccount</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label class="label">命名空间</label>
+                <select class="select">
+                  <option>全部</option>
+                  <option>cebpaas-system</option>
+                  <option>kube-system</option>
+                  <option>default</option>
+                  <option>core-banking</option>
+                  <option>payment-prod</option>
+                  <option>ops-platform</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label class="label">资源名称</label>
+                <input class="input" placeholder="按资源名称模糊搜索" />
+              </div>
+
+              <div class="form-row">
+                <label class="label">资源类型</label>
+                <select class="select">
+                  <option>全部</option>
+                  <option>configmaps</option>
+                  <option>secrets</option>
+                  <option>clusterrolebindings</option>
+                  <option>deployments</option>
+                  <option>services</option>
+                  <option>pods</option>
+                  <option>cronjobs</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="filter-row">
+              <div class="filter-left">
+                <select class="select small-select">
+                  <option>近 1 天</option>
+                  <option>近 7 天</option>
+                  <option>近 30 天</option>
+                  <option>自定义时间</option>
+                </select>
+              </div>
+
+              <div class="actions-area">
+                <label class="quiet-switch-area" title="默认隐藏 get / list / watch 等低价值审计操作">
+                  <input id="lowValueSwitch" type="checkbox" />
+                  <span class="quiet-switch"></span>
+                  <span class="quiet-switch-text">显示低价值操作</span>
+                  <span class="quiet-switch-hint">get / list / watch</span>
+                </label>
+
+                <div class="btn-group">
+                  <button class="btn btn-primary">搜索</button>
+                  <button class="btn btn-default">重置</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-section">
+            <table>
+              <thead>
+                <tr>
+                  <th class="col-project">项目</th>
+                  <th class="col-namespace">命名空间</th>
+                  <th class="col-action">操作</th>
+                  <th class="col-resource">资源名称/类型</th>
+                  <th class="col-user">操作人</th>
+                  <th class="col-status">
+                    操作结果
+                    <span class="help" style="margin-left: 4px;">?</span>
+                  </th>
+                  <th class="col-time">操作时间</th>
+                  <th class="col-detail"></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>Container Platform</td>
+                  <td>-</td>
+                  <td>修改</td>
+                  <td>
+                    <div class="resource-main">history-20260706</div>
+                    <div class="resource-sub">clusterrolebindings</div>
+                  </td>
+                  <td>k01106</td>
+                  <td><span class="success">成功</span></td>
+                  <td>2026-07-11 16:49:15</td>
+                  <td><span class="raw-link">原文</span></td>
+                </tr>
+
+                <tr>
+                  <td>Payment Platform</td>
+                  <td>payment-prod</td>
+                  <td>patch</td>
+                  <td>
+                    <div class="resource-main">payment-api</div>
+                    <div class="resource-sub">deployments</div>
+                  </td>
+                  <td>775596</td>
+                  <td><span class="success">成功</span></td>
+                  <td>2026-07-11 15:32:18</td>
+                  <td><span class="raw-link">原文</span></td>
+                </tr>
+
+                <tr>
+                  <td>Operations Platform</td>
+                  <td>ops-platform</td>
+                  <td>delete</td>
+                  <td>
+                    <div class="resource-main">expired-token-cleaner</div>
+                    <div class="resource-sub">cronjobs</div>
+                  </td>
+                  <td>admin</td>
+                  <td><span class="success">成功</span></td>
+                  <td>2026-07-11 14:21:09</td>
+                  <td><span class="raw-link">原文</span></td>
+                </tr>
+
+                <tr>
+                  <td>Operations Platform</td>
+                  <td>kube-system</td>
+                  <td>sync</td>
+                  <td>
+                    <div class="resource-main">hostnic-ipam-config</div>
+                    <div class="resource-sub">configmaps</div>
+                  </td>
+                  <td>system:kube-controller-manager</td>
+                  <td><span class="success">成功</span></td>
+                  <td>2026-07-11 06:09:05</td>
+                  <td><span class="raw-link">原文</span></td>
+                </tr>
+
+                <tr>
+                  <td>Operations Platform</td>
+                  <td>kube-system</td>
+                  <td>health-check</td>
+                  <td>
+                    <div class="resource-main">hostnic-ipam-config</div>
+                    <div class="resource-sub">configmaps</div>
+                  </td>
+                  <td>system:kube-scheduler</td>
+                  <td><span class="success">成功</span></td>
+                  <td>2026-07-11 04:40:49</td>
+                  <td><span class="raw-link">原文</span></td>
+                </tr>
+
+                <tr class="low-value-row">
+                  <td>Core Banking</td>
+                  <td>cebpaas-system</td>
+                  <td>list</td>
+                  <td>
+                    <div class="resource-main">-</div>
+                    <div class="resource-sub">secrets</div>
+                  </td>
+                  <td>774170</td>
+                  <td><span class="success">成功</span></td>
+                  <td>2026-07-11 12:06:53</td>
+                  <td><span class="raw-link">原文</span></td>
+                </tr>
+
+                <tr class="low-value-row">
+                  <td>Core Banking</td>
+                  <td>cebpaas-system</td>
+                  <td>get</td>
+                  <td> 
+                    <div class="resource-main">payment-secret</div>
+                    <div class="resource-sub">secrets</div>
+                  </td>
+                  <td>774170</td>
+                  <td><span class="success">成功</span></td>
+                  <td>2026-07-11 12:06:49</td>
+                  <td><span class="raw-link">原文</span></td>
+                </tr>
+
+                <tr class="low-value-row">
+                  <td>Operations Platform</td>
+                  <td>kube-system</td>
+                  <td>watch</td>
+                  <td>
+                    <div class="resource-main">-</div>
+                    <div class="resource-sub">pods</div>
+                  </td>
+                  <td>system:serviceaccount</td>
+                  <td><span class="success">成功</span></td>
+                  <td>2026-07-11 11:58:31</td>
+                  <td><span class="raw-link">原文</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <span id="totalCount">共 5 条</span>
+            <span class="page-arrow">‹</span>
+            <span class="page-num">1</span>
+
+            <select class="page-size">
+              <option>20条/页</option>
+              <option>50条/页</option>
+              <option>100条/页</option>
+            </select>
+            <span>前往</span>
+            <input class="jump-input" value="1" />
+            <span>页</span>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const lowValueSwitch = document.getElementById("lowValueSwitch");
+    const totalCount = document.getElementById("totalCount");
+
+    lowValueSwitch.addEventListener("change", function () {
+      document.body.classList.toggle("show-low-value", this.checked);
+      totalCount.textContent = this.checked ? "共 8 条" : "共 5 条";
+    });
+  </script>
+</body>
+</html>
