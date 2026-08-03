@@ -1,16 +1,21 @@
 ==================================================
   Wintool 代码片段库 - Python 后端
-  访问地址: http://localhost:8081
-  注意: 8080 端口被占用，已自动切换到 8081 端口
+  访问地址: http://localhost:8080
   数据文件: code_snippets/snippets.json
-  前端模式: 开发环境（需单独启动）
-  提示: 运行 'cd frontend && npm run build' 生成静态文件
+  前端模式: 生产环境（静态文件）
+  前端目录: /Users/ian/workdir/wintool/frontend/dist
 ==================================================
 
  * Serving Flask app 'app'
  * Debug mode: off
 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:8081
- * Running on http://172.20.10.4:8081
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.20.10.10:8080
 [33mPress CTRL+C to quit[0m
+127.0.0.1 - - [07/Jul/2026 18:58:52] "GET /prototypes/example.html HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 10:03:10] "[36mGET /prototypes/example.html HTTP/1.1[0m" 304 -
+127.0.0.1 - - [08/Jul/2026 11:11:57] "[36mGET /prototypes/example.html HTTP/1.1[0m" 304 -
+127.0.0.1 - - [08/Jul/2026 15:49:17] "GET /api/code-snippets HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 15:49:36] "GET /api/code-snippets HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 15:49:39] "GET /api/code-snippets HTTP/1.1" 200 -

@@ -6,3 +6,6 @@
 5. 使用最基础、最低级的方式实现，不使用高阶技巧
 6. 完全离线，所有依赖必须打包在内
 7. 运行时动态处理，不依赖系统配置
+
+
+审计请求结构体图片https://pfst.cf2.poecdn.net/base/image/b444f13b4d66af26ab06d16f5edaf0ecfb07c609b27a6bb07a756aa299cc9fdc?w=444&h=762&pmaid=635563968
