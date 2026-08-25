@@ -88,6 +88,13 @@ export const useToolStore = defineStore('tool', {
         category: '开发工具'
       },
       {
+        id: 'timestamp-converter',
+        name: '时间戳转换',
+        description: '时间戳与多种日期格式互相转换',
+        icon: '⏰',
+        category: '开发工具'
+      },
+      {
         id: 'text-viewer',
         name: '文本查看器',
         description: '查看和编辑文本文档',

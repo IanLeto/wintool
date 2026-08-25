@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 # Wintool 全部启动脚本
-# 用途：同时启动前端、后端和 Legacy 版本
+# 用途：同时启动前端和后端服务
 
 set -euo pipefail
 
@@ -71,25 +71,6 @@ cleanup() {
         rm -f "$PID_DIR/backend.pid"
     fi
     
-    # 停止 Legacy
-    if [[ -f "$PID_DIR/legacy.pid" ]]; then
-        LEGACY_PID=$(cat "$PID_DIR/legacy.pid")
-        if kill -0 "$LEGACY_PID" 2>/dev/null; then
-            echo_info "停止 Legacy 服务 (PID: $LEGACY_PID)..."
-            kill "$LEGACY_PID" 2>/dev/null || true
-            for i in {1..10}; do
-                if ! kill -0 "$LEGACY_PID" 2>/dev/null; then
-                    break
-                fi
-                sleep 0.5
-            done
-            if kill -0 "$LEGACY_PID" 2>/dev/null; then
-                kill -9 "$LEGACY_PID" 2>/dev/null || true
-            fi
-        fi
-        rm -f "$PID_DIR/legacy.pid"
-    fi
-    
     echo_info "所有服务已停止"
     exit 0
 }
@@ -103,7 +84,7 @@ echo_title "========================================="
 echo ""
 
 # 检查是否有服务正在运行
-if [[ -f "$PID_DIR/frontend.pid" ]] || [[ -f "$PID_DIR/backend.pid" ]] || [[ -f "$PID_DIR/legacy.pid" ]]; then
+if [[ -f "$PID_DIR/frontend.pid" ]] || [[ -f "$PID_DIR/backend.pid" ]]; then
     echo_warn "检测到有服务正在运行，正在清理..."
     cleanup
 fi
@@ -133,20 +114,6 @@ echo_info "日志文件: $PID_DIR/frontend.log"
 echo_info "访问地址: http://localhost:5173 (或 5174)"
 echo ""
 
-# 等待前端启动
-sleep 3
-
-# 启动 Legacy
-echo_service "启动 Legacy 服务..."
-cd "$SCRIPT_DIR"
-nohup bash run_simply.sh > "$PID_DIR/legacy.log" 2>&1 &
-LEGACY_PID=$!
-echo "$LEGACY_PID" > "$PID_DIR/legacy.pid"
-echo_info "Legacy 服务已启动 (PID: $LEGACY_PID)"
-echo_info "日志文件: $PID_DIR/legacy.log"
-echo_info "访问地址: http://localhost:5000 (或其他端口)"
-echo ""
-
 echo_title "========================================="
 echo_title "  所有服务启动完成！"
 echo_title "========================================="
@@ -154,7 +121,6 @@ echo ""
 echo_info "服务列表："
 echo_info "  - 后端 (Spring Boot): http://localhost:8080"
 echo_info "  - 前端 (Vue 3):       http://localhost:5173"
-echo_info "  - Legacy (Flask):     http://localhost:5000"
 echo ""
 echo_info "日志目录: $PID_DIR"
 echo ""
@@ -189,16 +155,6 @@ while true; do
         else
             echo_error "前端服务已停止！"
             rm -f "$PID_DIR/frontend.pid"
-        fi
-    fi
-    
-    if [[ -f "$PID_DIR/legacy.pid" ]]; then
-        LEGACY_PID=$(cat "$PID_DIR/legacy.pid")
-        if kill -0 "$LEGACY_PID" 2>/dev/null; then
-            ((SERVICES_RUNNING++))
-        else
-            echo_error "Legacy 服务已停止！"
-            rm -f "$PID_DIR/legacy.pid"
         fi
     fi
     

@@ -82,7 +82,7 @@ const goBack = () => {
 
 const hasImplementation = (toolId) => {
   // 已实现的工具列表
-  const implementedTools = ['export-dir', 'code-snippets', 'k8s-cluster', 'kafka-consumer', 'prototype-viewer']
+  const implementedTools = ['export-dir', 'code-snippets', 'k8s-cluster', 'kafka-consumer', 'prototype-viewer', 'timestamp-converter']
   return implementedTools.includes(toolId)
 }
 
@@ -93,7 +93,8 @@ const goToTool = () => {
     'code-snippets': '/tools/code-snippets',
     'k8s-cluster': '/tools/k8s-cluster',
     'kafka-consumer': '/tools/kafka-consumer',
-    'prototype-viewer': '/tools/prototype-viewer'
+    'prototype-viewer': '/tools/prototype-viewer',
+    'timestamp-converter': '/tools/timestamp-converter'
   }
   
   const routePath = toolRoutes[route.params.id]
@@ -206,6 +207,17 @@ const getPlannedFeatures = (toolId) => {
       '✅ 文件大小和修改时间显示',
       '✅ 响应式设计',
       '✅ 快速访问原型设计'
+    ],
+    'timestamp-converter': [
+      '✅ 支持秒/毫秒/微秒/纳秒时间戳',
+      '✅ 自动识别时间戳精度',
+      '✅ 支持日期字符串输入',
+      '✅ 15+ 种时间格式输出',
+      '✅ ISO 8601、RFC 2822 标准格式',
+      '✅ 中文、美式日期格式',
+      '✅ 一键复制任意格式',
+      '✅ 实时转换，无需点击',
+      '✅ 完全离线运行'
     ]
   }
   

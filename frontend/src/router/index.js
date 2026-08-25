@@ -37,6 +37,11 @@ const routes = [
     path: '/tools/prototype-viewer',
     name: 'PrototypeViewer',
     component: () => import('../views/tools/PrototypeViewerTool.vue')
+  },
+  {
+    path: '/tools/timestamp-converter',
+    name: 'TimestampConverter',
+    component: () => import('../views/tools/TimestampConverterTool.vue')
   }
 ]
 

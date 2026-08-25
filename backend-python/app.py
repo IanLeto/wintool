@@ -60,8 +60,7 @@ def load_snippets():
     try:
         with open(DATA_FILE, 'r', encoding='utf-8') as f:
             return json.load(f)
-    except Exception as e:
-        print(f"加载数据失败: {e}")
+    except Exception:
         return []
 
 
@@ -71,8 +70,7 @@ def save_snippets(snippets):
         with open(DATA_FILE, 'w', encoding='utf-8') as f:
             json.dump(snippets, f, ensure_ascii=False, indent=2)
         return True
-    except Exception as e:
-        print(f"保存数据失败: {e}")
+    except Exception:
         return False
 
 
@@ -805,6 +803,91 @@ def kafka_consume_messages():
         }), 500
 
 
+# ==================== 时间戳转换工具 API ====================
+
+@app.route('/api/timestamp/convert', methods=['POST'])
+def convert_timestamp():
+    """时间戳转换"""
+    try:
+        data = request.get_json()
+        input_value = data.get('value', '')
+        
+        if not input_value:
+            return jsonify({
+                'success': False,
+                'message': '输入值不能为空'
+            }), 400
+        
+        # 尝试解析输入
+        try:
+            # 如果是数字字符串，转换为整数
+            if isinstance(input_value, str) and input_value.isdigit():
+                timestamp = int(input_value)
+            elif isinstance(input_value, (int, float)):
+                timestamp = int(input_value)
+            else:
+                # 尝试解析为日期字符串
+                from dateutil import parser
+                dt = parser.parse(input_value)
+                timestamp = int(dt.timestamp())
+        except:
+            # 如果解析失败，尝试作为时间戳处理
+            try:
+                timestamp = int(float(input_value))
+            except:
+                return jsonify({
+                    'success': False,
+                    'message': '无法解析输入值'
+                }), 400
+        
+        # 自动判断时间戳精度（秒/毫秒/微秒/纳秒）
+        if timestamp > 1e17:  # 纳秒 (> 100,000,000,000,000,000)
+            dt = datetime.fromtimestamp(timestamp / 1e9)
+            precision = 'nanosecond'
+        elif timestamp > 1e13:  # 微秒 (> 10,000,000,000,000)
+            dt = datetime.fromtimestamp(timestamp / 1e6)
+            precision = 'microsecond'
+        elif timestamp > 1e10:  # 毫秒 (> 10,000,000,000)
+            dt = datetime.fromtimestamp(timestamp / 1000)
+            precision = 'millisecond'
+        else:  # 秒
+            dt = datetime.fromtimestamp(timestamp)
+            precision = 'second'
+        
+        # 生成各种格式
+        result = {
+            'success': True,
+            'precision': precision,
+            'formats': {
+                'timestamp_second': int(dt.timestamp()),
+                'timestamp_millisecond': int(dt.timestamp() * 1000),
+                'timestamp_microsecond': int(dt.timestamp() * 1e6),
+                'timestamp_nanosecond': int(dt.timestamp() * 1e9),
+                'iso8601': dt.isoformat(),
+                'iso8601_utc': dt.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+                'rfc2822': dt.strftime('%a, %d %b %Y %H:%M:%S'),
+                'date_cn': dt.strftime('%Y年%m月%d日'),
+                'datetime_cn': dt.strftime('%Y年%m月%d日 %H:%M:%S'),
+                'date_us': dt.strftime('%m/%d/%Y'),
+                'datetime_us': dt.strftime('%m/%d/%Y %H:%M:%S'),
+                'date_standard': dt.strftime('%Y-%m-%d'),
+                'datetime_standard': dt.strftime('%Y-%m-%d %H:%M:%S'),
+                'time_only': dt.strftime('%H:%M:%S'),
+                'year_month': dt.strftime('%Y-%m'),
+                'weekday_cn': ['周一', '周二', '周三', '周四', '周五', '周六', '周日'][dt.weekday()],
+                'weekday_en': dt.strftime('%A'),
+            }
+        }
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'转换失败: {str(e)}'
+        }), 500
+
+
 # 原型文件静态服务
 @app.route('/prototypes/<path:filename>')
 def serve_prototype(filename):
@@ -850,31 +933,7 @@ def find_available_port(start_port=8080, max_attempts=10):
 
 
 if __name__ == '__main__':
-    # 查找可用端口
     port = find_available_port(8080)
-    
     if port is None:
-        print("=" * 50)
-        print("  错误: 无法找到可用端口（尝试了 8080-8089）")
-        print("  请手动停止占用端口的程序，或修改代码指定其他端口")
-        print("=" * 50)
         exit(1)
-    
-    print("=" * 50)
-    print("  Wintool 代码片段库 - Python 后端")
-    print(f"  访问地址: http://localhost:{port}")
-    if port != 8080:
-        print(f"  注意: 8080 端口被占用，已自动切换到 {port} 端口")
-    print("  数据文件: code_snippets/snippets.json")
-    
-    if FRONTEND_DIST.exists():
-        print("  前端模式: 生产环境（静态文件）")
-        print("  前端目录:", FRONTEND_DIST)
-    else:
-        print("  前端模式: 开发环境（需单独启动）")
-        print("  提示: 运行 'cd frontend && npm run build' 生成静态文件")
-    
-    print("=" * 50)
-    print()
-    
     app.run(host='0.0.0.0', port=port, debug=False)
